@@ -1,12 +1,29 @@
 import * as React from "react";
 import styled from "styled-components";
+import TerminalRoundedIcon from "@mui/icons-material/TerminalRounded";
+import WebRoundedIcon from "@mui/icons-material/WebRounded";
+import CloudQueueRoundedIcon from "@mui/icons-material/CloudQueueRounded";
+import StorageRoundedIcon from "@mui/icons-material/StorageRounded";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
+import HubRoundedIcon from "@mui/icons-material/HubRounded";
+import PrecisionManufacturingRoundedIcon from "@mui/icons-material/PrecisionManufacturingRounded";
 import {
   education,
-  getSkillsForResume,
   personalInfo,
+  Skill,
+  skills as skillsByCategory,
   workExperience,
 } from "../data/resume";
 import { MainLayout } from "../styles/Layouts";
+
+type SkillWithCategory = Skill & {
+  category: string;
+};
+
+type GroupedSkills = {
+  category: string;
+  topSkills: Skill[];
+};
 
 const shortenText = (text: string) => {
   const cleanText = text.trim();
@@ -20,147 +37,243 @@ const shortenText = (text: string) => {
   return preview.endsWith(".") ? preview : `${preview}.`;
 };
 
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case "Programming Languages":
+      return <TerminalRoundedIcon />;
+    case "Frontend Technologies":
+      return <WebRoundedIcon />;
+    case "Backend & Cloud":
+      return <CloudQueueRoundedIcon />;
+    case "Databases":
+      return <StorageRoundedIcon />;
+    case "Microsoft Technologies":
+      return <TokenRoundedIcon />;
+    case "Blockchain & Web3":
+      return <HubRoundedIcon />;
+    default:
+      return <PrecisionManufacturingRoundedIcon />;
+  }
+};
+
 const ResumePage = () => {
   const yearsOfExperience = Math.max(1, new Date().getFullYear() - 2017);
-  const featuredSkills = getSkillsForResume()
-    .sort((first, second) => second.level - first.level)
-    .slice(0, 8);
+  const allSkills = React.useMemo<SkillWithCategory[]>(() => {
+    const flattenedSkills: SkillWithCategory[] = [];
+
+    for (const categoryName in skillsByCategory) {
+      const categorySkills = skillsByCategory[categoryName];
+
+      for (const skill of categorySkills) {
+        flattenedSkills.push({
+          ...skill,
+          category: categoryName,
+        });
+      }
+    }
+
+    return flattenedSkills;
+  }, []);
+  const featuredSkills = React.useMemo<SkillWithCategory[]>(() => {
+    const uniqueSkills = Array.from(
+      new Map(allSkills.map((skill) => [skill.name, skill])).values(),
+    );
+
+    return uniqueSkills.sort((first, second) => second.level - first.level);
+  }, [allSkills]);
+  const groupedSkills = React.useMemo<GroupedSkills[]>(() => {
+    const groups: GroupedSkills[] = [];
+
+    for (const categoryName in skillsByCategory) {
+      groups.push({
+        category: categoryName,
+        topSkills: [...skillsByCategory[categoryName]]
+          .sort((first, second) => second.level - first.level)
+          .slice(0, 4),
+      });
+    }
+
+    return groups;
+  }, []);
+  const [activeSkillIndex, setActiveSkillIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    if (featuredSkills.length === 0) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setActiveSkillIndex(
+        (previousIndex) => (previousIndex + 1) % featuredSkills.length,
+      );
+    }, 2600);
+
+    return () => window.clearInterval(intervalId);
+  }, [featuredSkills.length]);
+
+  const spotlightSkill = featuredSkills[activeSkillIndex];
   const latestRole = workExperience[0];
   const topStack = featuredSkills.slice(0, 4).map((skill) => skill.name);
 
   return (
     <ResumePageStyled>
       <MainLayout>
-        <section className="heroCard">
-          <p className="kicker">Curriculum Vitae</p>
-          <h1>{personalInfo.name}</h1>
-          <p className="headline">{personalInfo.title}</p>
-          <p className="summary">{personalInfo.tagline}</p>
-          <div className="quickFacts">
-            <div>
-              <h4>{yearsOfExperience}+</h4>
-              <p>Years in tech</p>
-            </div>
-            <div>
-              <h4>{workExperience.length}</h4>
-              <p>Professional roles</p>
-            </div>
-            <div>
-              <h4>{featuredSkills.length}</h4>
-              <p>Core skills tracked</p>
-            </div>
-          </div>
-        </section>
+        <HeroCard>
+          <Kicker>Curriculum Vitae</Kicker>
+          <NameTitle>{personalInfo.name}</NameTitle>
+          <Headline>{personalInfo.title}</Headline>
+          <Summary>{personalInfo.tagline}</Summary>
+          <QuickFacts>
+            <QuickFactCard>
+              <QuickFactValue>{yearsOfExperience}+</QuickFactValue>
+              <QuickFactLabel>Years in tech</QuickFactLabel>
+            </QuickFactCard>
+            <QuickFactCard>
+              <QuickFactValue>{workExperience.length}</QuickFactValue>
+              <QuickFactLabel>Professional roles</QuickFactLabel>
+            </QuickFactCard>
+            <QuickFactCard>
+              <QuickFactValue>{allSkills.length}</QuickFactValue>
+              <QuickFactLabel>Core skills tracked</QuickFactLabel>
+            </QuickFactCard>
+          </QuickFacts>
+        </HeroCard>
 
-        <section className="resumeGrid">
-          <aside className="leftColumn">
-            <div className="panel">
-              <h3>Resume Snapshot</h3>
-              <ul className="snapshotList">
-                <li>
-                  <span>Current focus</span>
-                  <p>
+        <ResumeGrid>
+          <LeftColumn>
+            <Panel as="aside">
+              <PanelTitle>Resume Snapshot</PanelTitle>
+              <SnapshotList>
+                <SnapshotItem>
+                  <SnapshotLabel>Current focus</SnapshotLabel>
+                  <SnapshotValue>
                     {latestRole?.title} at {latestRole?.company}
-                  </p>
-                </li>
-                <li>
-                  <span>Primary stack</span>
-                  <p>{topStack.join(", ")}</p>
-                </li>
-                <li>
-                  <span>Career span</span>
-                  <p>2017 - Present ({yearsOfExperience}+ years)</p>
-                </li>
-                <li>
-                  <span>Base</span>
-                  <p>{personalInfo.location}</p>
-                </li>
-              </ul>
-            </div>
+                  </SnapshotValue>
+                </SnapshotItem>
+                <SnapshotItem>
+                  <SnapshotLabel>Primary stack</SnapshotLabel>
+                  <SnapshotValue>{topStack.join(", ")}</SnapshotValue>
+                </SnapshotItem>
+                <SnapshotItem>
+                  <SnapshotLabel>Career span</SnapshotLabel>
+                  <SnapshotValue>
+                    2017 - Present ({yearsOfExperience}+ years)
+                  </SnapshotValue>
+                </SnapshotItem>
+                <SnapshotItem>
+                  <SnapshotLabel>Base</SnapshotLabel>
+                  <SnapshotValue>{personalInfo.location}</SnapshotValue>
+                </SnapshotItem>
+              </SnapshotList>
+            </Panel>
 
-            <div className="panel">
-              <h3>Top Skills</h3>
-              <p className="skillsIntro">
-                Tools and technologies I use most often in production.
-              </p>
-              <div className="skillsCloud">
-                {featuredSkills.map((skill, index) => (
-                  <span
-                    key={skill.name}
-                    className={`skillChip ${index < 3 ? "isPrimary" : ""}`}
-                  >
-                    {skill.name}
-                  </span>
+            <Panel as="aside">
+              <PanelTitle>Top Skills</PanelTitle>
+              <SkillsIntro>
+                Grouped by focus area for faster scanning.
+              </SkillsIntro>
+              <SkillsSpotlight aria-live="polite">
+                <SpotlightLabel>Now Highlighting</SpotlightLabel>
+                <SpotlightName>
+                  {spotlightSkill?.name ?? "Skill Focus"}
+                </SpotlightName>
+                <SpotlightMeta>
+                  {spotlightSkill?.category ?? "Core Expertise"}
+                </SpotlightMeta>
+              </SkillsSpotlight>
+              <SkillsCloud>
+                {groupedSkills.map((groupedSkill) => (
+                  <SkillCategory key={groupedSkill.category}>
+                    <CategoryHeading>
+                      <CategoryIcon>
+                        {getCategoryIcon(groupedSkill.category)}
+                      </CategoryIcon>
+                      <CategoryName>{groupedSkill.category}</CategoryName>
+                    </CategoryHeading>
+                    <CategorySkills>
+                      {groupedSkill.topSkills.map((skill) => (
+                        <SkillChip
+                          $isFeatured={spotlightSkill?.name === skill.name}
+                          key={`${groupedSkill.category}-${skill.name}`}
+                        >
+                          {skill.name}
+                        </SkillChip>
+                      ))}
+                    </CategorySkills>
+                  </SkillCategory>
                 ))}
-              </div>
-            </div>
-          </aside>
+              </SkillsCloud>
+            </Panel>
+          </LeftColumn>
 
-          <div className="rightColumn">
-            <section className="panel">
-              <div className="sectionHeading">
-                <h3>Experience</h3>
-                <p>Career highlights and impact</p>
-              </div>
-              <div className="timeline">
+          <RightColumn>
+            <Panel as="section">
+              <SectionHeading>
+                <PanelTitle>Experience</PanelTitle>
+                <SectionMeta>Career highlights and impact</SectionMeta>
+              </SectionHeading>
+              <Timeline>
                 {workExperience.map((experience) => (
-                  <article className="timelineItem" key={experience.id}>
-                    <div className="timelineMeta">
-                      <span className="duration">{experience.duration}</span>
+                  <TimelineItem key={experience.id}>
+                    <TimelineMeta>
+                      <TimelineBadge>{experience.duration}</TimelineBadge>
                       {experience.location && (
-                        <span className="location">{experience.location}</span>
+                        <TimelineBadge>{experience.location}</TimelineBadge>
                       )}
-                    </div>
-                    <h4>{experience.title}</h4>
-                    <h5>{experience.company}</h5>
-                    <p>{shortenText(experience.description)}</p>
-                  </article>
+                    </TimelineMeta>
+                    <TimelineTitle>{experience.title}</TimelineTitle>
+                    <TimelineSubtitle>{experience.company}</TimelineSubtitle>
+                    <TimelineText>
+                      {shortenText(experience.description)}
+                    </TimelineText>
+                  </TimelineItem>
                 ))}
-              </div>
-            </section>
+              </Timeline>
+            </Panel>
 
-            <section className="panel">
-              <div className="sectionHeading">
-                <h3>Education</h3>
-                <p>Academic background</p>
-              </div>
-              <div className="timeline">
+            <Panel as="section">
+              <SectionHeading>
+                <PanelTitle>Education</PanelTitle>
+                <SectionMeta>Academic background</SectionMeta>
+              </SectionHeading>
+              <Timeline>
                 {education.map((item) => (
-                  <article className="timelineItem" key={item.id}>
-                    <div className="timelineMeta">
-                      <span className="duration">{item.duration}</span>
-                      <span className="location">{item.location}</span>
-                    </div>
-                    <h4>{item.degree}</h4>
-                    <h5>{item.institution}</h5>
-                    <p>{shortenText(item.description)}</p>
-                  </article>
+                  <TimelineItem key={item.id}>
+                    <TimelineMeta>
+                      <TimelineBadge>{item.duration}</TimelineBadge>
+                      <TimelineBadge>{item.location}</TimelineBadge>
+                    </TimelineMeta>
+                    <TimelineTitle>{item.degree}</TimelineTitle>
+                    <TimelineSubtitle>{item.institution}</TimelineSubtitle>
+                    <TimelineText>{shortenText(item.description)}</TimelineText>
+                  </TimelineItem>
                 ))}
-              </div>
-            </section>
-          </div>
-        </section>
+              </Timeline>
+            </Panel>
+          </RightColumn>
+        </ResumeGrid>
       </MainLayout>
     </ResumePageStyled>
   );
 };
 
-const ResumePageStyled = styled.div`
-  .heroCard {
-    background: linear-gradient(
-      120deg,
-      rgba(77, 163, 255, 0.14),
-      rgba(16, 18, 26, 0.35)
-    );
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
-    padding: 2.5rem;
-    margin-bottom: 2.5rem;
-    position: relative;
-    overflow: hidden;
-  }
+const ResumePageStyled = styled.div``;
 
-  .heroCard::after {
+const HeroCard = styled.section`
+  background: linear-gradient(
+    120deg,
+    var(--resume-hero-gradient-start),
+    var(--resume-hero-gradient-end)
+  );
+  border: 1px solid var(--resume-hero-border);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--resume-hero-shadow);
+
+  &::after {
     content: "";
     position: absolute;
     width: 16rem;
@@ -170,202 +283,309 @@ const ResumePageStyled = styled.div`
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(77, 163, 255, 0.35) 0%,
-      rgba(77, 163, 255, 0) 72%
+      var(--resume-hero-glow-start) 0%,
+      var(--resume-hero-glow-end) 72%
     );
     pointer-events: none;
   }
 
-  .kicker {
-    text-transform: uppercase;
-    letter-spacing: 0.16rem;
-    font-size: 0.75rem;
-    color: var(--primary-color-light);
-    margin-bottom: 0.8rem;
-    font-weight: 700;
+  @media screen and (max-width: 760px) {
+    padding: 1.8rem;
+  }
+`;
+
+const Kicker = styled.p`
+  text-transform: uppercase;
+  letter-spacing: 0.16rem;
+  font-size: 0.75rem;
+  color: var(--primary-color-light);
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+`;
+
+const NameTitle = styled.h1`
+  margin-bottom: 0.4rem;
+  line-height: 1.1;
+`;
+
+const Headline = styled.p`
+  color: var(--white-color);
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+`;
+
+const Summary = styled.p`
+  max-width: 55rem;
+  color: var(--font-light-color);
+  line-height: 1.6;
+  margin-bottom: 1.8rem;
+`;
+
+const QuickFacts = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+
+  @media screen and (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const QuickFactCard = styled.div`
+  background-color: var(--resume-fact-card-bg);
+  border: 1px solid var(--resume-fact-card-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.2rem;
+`;
+
+const QuickFactValue = styled.h4`
+  color: var(--white-color);
+  font-size: 1.7rem;
+  margin-bottom: 0.25rem;
+`;
+
+const QuickFactLabel = styled.p`
+  color: var(--font-light-color);
+  font-size: 0.92rem;
+`;
+
+const ResumeGrid = styled.section`
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.95fr) minmax(0, 1.8fr);
+  gap: 2rem;
+  align-items: start;
+
+  @media screen and (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const LeftColumn = styled.aside`
+  display: grid;
+  gap: 1.5rem;
+  position: sticky;
+  top: 2rem;
+
+  @media screen and (max-width: 1100px) {
+    position: static;
+    grid-template-columns: 1fr;
   }
 
-  h1 {
-    margin-bottom: 0.4rem;
-    line-height: 1.1;
+  @media screen and (max-width: 760px) {
+    grid-template-columns: 1fr;
   }
+`;
 
-  .headline {
-    color: var(--white-color);
-    font-size: 1.1rem;
-    margin-bottom: 0.8rem;
-  }
+const RightColumn = styled.div`
+  display: grid;
+  gap: 1.6rem;
+`;
 
-  .summary {
-    max-width: 55rem;
-    color: var(--font-light-color);
-    line-height: 1.6;
-    margin-bottom: 1.8rem;
-  }
+const Panel = styled.div`
+  border: 1px solid var(--resume-panel-border);
+  background-color: var(--resume-panel-bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--resume-panel-shadow);
+`;
 
-  .quickFacts {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-  }
+const PanelTitle = styled.h3`
+  color: var(--white-color);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+`;
 
-  .quickFacts > div {
-    background-color: rgba(25, 29, 43, 0.8);
-    border: 1px solid var(--border-color);
-    border-radius: 0.75rem;
-    padding: 1rem 1.2rem;
-  }
+const SnapshotList = styled.ul`
+  display: grid;
+  gap: 1rem;
+`;
 
-  .quickFacts h4 {
-    color: var(--white-color);
-    font-size: 1.7rem;
-    margin-bottom: 0.25rem;
-  }
+const SnapshotItem = styled.li`
+  display: grid;
+  gap: 0.2rem;
+  border-bottom: 1px solid var(--resume-divider-color);
+  padding-bottom: 0.85rem;
 
-  .quickFacts p {
-    color: var(--font-light-color);
-    font-size: 0.92rem;
-  }
-
-  .resumeGrid {
-    display: grid;
-    grid-template-columns: minmax(18rem, 0.95fr) minmax(0, 1.8fr);
-    gap: 2rem;
-    align-items: start;
-  }
-
-  .leftColumn {
-    display: grid;
-    gap: 1.5rem;
-    position: sticky;
-    top: 2rem;
-  }
-
-  .rightColumn {
-    display: grid;
-    gap: 1.6rem;
-  }
-
-  .panel {
-    border: 1px solid var(--border-color);
-    background-color: var(--sidebar-dark-color);
-    border-radius: 1rem;
-    padding: 1.5rem;
-  }
-
-  .panel h3 {
-    color: var(--white-color);
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-  }
-
-  .snapshotList {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .snapshotList li {
-    display: grid;
-    gap: 0.2rem;
-    border-bottom: 1px solid rgba(164, 172, 196, 0.15);
-    padding-bottom: 0.85rem;
-  }
-
-  .snapshotList li:last-child {
+  &:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
+`;
 
-  .snapshotList span {
-    font-size: 0.82rem;
-    color: var(--font-light-color);
-    text-transform: uppercase;
-    letter-spacing: 0.05rem;
+const SnapshotLabel = styled.span`
+  font-size: 0.82rem;
+  color: var(--font-light-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+`;
+
+const SnapshotValue = styled.p`
+  color: var(--white-color);
+  font-size: 0.98rem;
+  word-break: break-word;
+`;
+
+const SkillsIntro = styled.p`
+  color: var(--font-light-color);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+`;
+
+const SkillsSpotlight = styled.div`
+  border: 1px solid var(--resume-spotlight-border);
+  background: linear-gradient(
+    120deg,
+    var(--resume-spotlight-gradient-start),
+    var(--resume-spotlight-gradient-end)
+  );
+  border-radius: 0.85rem;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+`;
+
+const SpotlightLabel = styled.span`
+  display: inline-block;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  color: var(--resume-spotlight-label);
+  margin-bottom: 0.35rem;
+`;
+
+const SpotlightName = styled.p`
+  color: var(--white-color);
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+`;
+
+const SpotlightMeta = styled.small`
+  color: var(--font-light-color);
+  font-size: 0.86rem;
+`;
+
+const SkillsCloud = styled.div`
+  display: grid;
+  gap: 0.9rem;
+`;
+
+const SkillCategory = styled.article`
+  border: 1px solid var(--resume-category-border);
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  background-color: var(--resume-category-bg);
+`;
+
+const CategoryHeading = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.65rem;
+`;
+
+const CategoryIcon = styled.span`
+  width: 1.8rem;
+  height: 1.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.45rem;
+  background-color: var(--resume-category-icon-bg);
+  border: 1px solid var(--resume-category-icon-border);
+
+  svg {
+    font-size: 1rem;
+    color: var(--resume-category-icon-color);
   }
+`;
 
-  .snapshotList p {
-    color: var(--white-color);
-    font-size: 0.98rem;
-    word-break: break-word;
+const CategoryName = styled.h4`
+  color: var(--white-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+`;
+
+const CategorySkills = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+const SkillChip = styled.span<{ $isFeatured: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  padding: 0.46rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid
+    ${(props) =>
+      props.$isFeatured
+        ? "var(--resume-chip-featured-border)"
+        : "var(--resume-chip-border)"};
+  background: ${(props) =>
+    props.$isFeatured
+      ? "linear-gradient(120deg, var(--resume-chip-featured-gradient-start), var(--resume-chip-featured-gradient-end))"
+      : "var(--resume-chip-bg)"};
+  color: ${(props) =>
+    props.$isFeatured
+      ? "var(--resume-chip-featured-color)"
+      : "var(--white-color)"};
+  font-size: 0.86rem;
+  letter-spacing: 0.01rem;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--resume-chip-hover-border);
   }
+`;
 
-  .skillsIntro {
-    color: var(--font-light-color);
-    font-size: 0.92rem;
-    line-height: 1.5;
+const SectionHeading = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.3rem;
+
+  @media screen and (max-width: 760px) {
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: 1rem;
   }
+`;
 
-  .skillsCloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+const SectionMeta = styled.p`
+  color: var(--font-light-color);
+  font-size: 0.9rem;
+`;
+
+const Timeline = styled.div`
+  border-left: 2px solid var(--resume-timeline-line);
+  margin-left: 0.35rem;
+  padding-left: 1.3rem;
+  display: grid;
+  gap: 1rem;
+
+  @media screen and (max-width: 760px) {
+    margin-left: 0.1rem;
+    padding-left: 0.95rem;
   }
+`;
 
-  .skillChip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.46rem 0.78rem;
-    border-radius: 999px;
-    border: 1px solid rgba(164, 172, 196, 0.35);
-    background-color: rgba(16, 18, 26, 0.5);
-    color: var(--white-color);
-    font-size: 0.86rem;
-    letter-spacing: 0.01rem;
-    transition:
-      transform 0.2s ease,
-      border-color 0.2s ease,
-      background-color 0.2s ease;
-  }
+const TimelineItem = styled.article`
+  background-color: var(--resume-timeline-item-bg);
+  border: 1px solid var(--resume-timeline-item-border);
+  border-radius: 0.85rem;
+  padding: 1.15rem;
+  position: relative;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
 
-  .skillChip.isPrimary {
-    border-color: rgba(77, 163, 255, 0.55);
-    background: linear-gradient(
-      120deg,
-      rgba(77, 163, 255, 0.2),
-      rgba(77, 163, 255, 0.08)
-    );
-    color: #dceeff;
-  }
-
-  .skillChip:hover {
-    transform: translateY(-1px);
-    border-color: rgba(77, 163, 255, 0.65);
-  }
-
-  .sectionHeading {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 1.3rem;
-  }
-
-  .sectionHeading p {
-    color: var(--font-light-color);
-    font-size: 0.9rem;
-  }
-
-  .timeline {
-    border-left: 2px solid rgba(77, 163, 255, 0.35);
-    margin-left: 0.35rem;
-    padding-left: 1.3rem;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .timelineItem {
-    background-color: rgba(16, 18, 26, 0.55);
-    border: 1px solid var(--border-color);
-    border-radius: 0.85rem;
-    padding: 1.15rem;
-    position: relative;
-    transition:
-      transform 0.25s ease,
-      border-color 0.25s ease;
-  }
-
-  .timelineItem::before {
+  &::before {
     content: "";
     width: 0.85rem;
     height: 0.85rem;
@@ -377,85 +597,51 @@ const ResumePageStyled = styled.div`
     top: 1.35rem;
   }
 
-  .timelineItem:hover {
+  &:hover {
     transform: translateY(-2px);
-    border-color: rgba(77, 163, 255, 0.55);
-  }
-
-  .timelineMeta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.7rem;
-  }
-
-  .timelineMeta span {
-    font-size: 0.8rem;
-    line-height: 1;
-    padding: 0.42rem 0.62rem;
-    border-radius: 999px;
-    background-color: rgba(77, 163, 255, 0.18);
-    color: var(--white-color);
-    border: 1px solid rgba(77, 163, 255, 0.35);
-  }
-
-  .timelineItem h4 {
-    font-size: 1.15rem;
-    margin-bottom: 0.25rem;
-    color: var(--white-color);
-  }
-
-  .timelineItem h5 {
-    font-size: 0.95rem;
-    color: var(--primary-color-light);
-    margin-bottom: 0.6rem;
-  }
-
-  .timelineItem p {
-    color: var(--font-light-color);
-    font-size: 0.96rem;
-    line-height: 1.55;
-  }
-
-  @media screen and (max-width: 1100px) {
-    .resumeGrid {
-      grid-template-columns: 1fr;
-    }
-
-    .leftColumn {
-      position: static;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    border-color: var(--resume-timeline-item-hover-border);
   }
 
   @media screen and (max-width: 760px) {
-    .heroCard {
-      padding: 1.8rem;
-    }
-
-    .quickFacts {
-      grid-template-columns: 1fr;
-    }
-
-    .leftColumn {
-      grid-template-columns: 1fr;
-    }
-
-    .sectionHeading {
-      flex-direction: column;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .timeline {
-      margin-left: 0.1rem;
-      padding-left: 0.95rem;
-    }
-
-    .timelineItem::before {
+    &::before {
       left: -1.5rem;
     }
   }
+`;
+
+const TimelineMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+`;
+
+const TimelineBadge = styled.span`
+  font-size: 0.8rem;
+  line-height: 1;
+  padding: 0.42rem 0.62rem;
+  border-radius: 999px;
+  background-color: var(--resume-timeline-badge-bg);
+  color: var(--white-color);
+  border: 1px solid var(--resume-timeline-badge-border);
+`;
+
+const TimelineTitle = styled.h4`
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+  color: var(--white-color);
+`;
+
+const TimelineSubtitle = styled.h5`
+  font-size: 0.95rem;
+  color: var(--primary-color-light);
+  margin-bottom: 0.6rem;
+`;
+
+const TimelineText = styled.p`
+  color: var(--font-light-color);
+  font-size: 0.96rem;
+  line-height: 1.55;
 `;
 
 export default ResumePage;
