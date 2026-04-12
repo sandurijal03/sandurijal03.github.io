@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import Email from '@mui/icons-material/Email';
-import GitHub from '@mui/icons-material/GitHub';
-import Language from '@mui/icons-material/Language';
-import LinkedIn from '@mui/icons-material/LinkedIn';
-import LocationOn from '@mui/icons-material/LocationOn';
-import Twitter from '@mui/icons-material/Twitter';
+import React, { useState, useEffect } from "react";
+import styled, { createGlobalStyle } from "styled-components";
+import AutoAwesomeRounded from "@mui/icons-material/AutoAwesomeRounded";
+import EmojiEventsRounded from "@mui/icons-material/EmojiEventsRounded";
+import Email from "@mui/icons-material/Email";
+import GitHub from "@mui/icons-material/GitHub";
+import Language from "@mui/icons-material/Language";
+import LinkedIn from "@mui/icons-material/LinkedIn";
+import LocationOn from "@mui/icons-material/LocationOn";
+import PsychologyRounded from "@mui/icons-material/PsychologyRounded";
+import PublicRounded from "@mui/icons-material/PublicRounded";
+import RocketLaunchRounded from "@mui/icons-material/RocketLaunchRounded";
+import WorkspacePremiumRounded from "@mui/icons-material/WorkspacePremiumRounded";
 import {
   personalInfo,
   workExperience,
   education,
   skills,
-} from '../data/resume';
+} from "../data/resume";
 
 // Global print styles
 const PrintStyles = createGlobalStyle`
@@ -188,6 +193,60 @@ const PrintStyles = createGlobalStyle`
 const CVPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
+  const currentFocusItems = [
+    {
+      icon: <PsychologyRounded />,
+      title: "Learning",
+      text: "Currently studying Rust and Python with Neovim for data science.",
+    },
+    {
+      icon: <RocketLaunchRounded />,
+      title: "Goal",
+      text: "Building everything with Rust and expanding into systems-level development.",
+    },
+    {
+      icon: <AutoAwesomeRounded />,
+      title: "Expertise",
+      text: "Available for consultation on React, Node.js, JavaScript, and TypeScript.",
+    },
+    {
+      icon: <EmojiEventsRounded />,
+      title: "Growth",
+      text: "Continuously expanding skillset across both frontend and backend technologies.",
+    },
+  ];
+
+  const credentialCards = [
+    {
+      icon: <WorkspacePremiumRounded />,
+      title: "Professional Certifications",
+      subtitle: "Validated learning milestones",
+      items: [
+        {
+          title: "Build web app with React.js",
+          context: "OpenClassrooms",
+          period: "Issued Jul 2019",
+          details:
+            "Applied component architecture, state handling, and responsive front-end fundamentals.",
+        },
+      ],
+    },
+    {
+      icon: <EmojiEventsRounded />,
+      title: "Professional Awards",
+      subtitle: "Recognized delivery and impact",
+      items: [
+        {
+          title: "Best Employee of the Month - Evening Shift",
+          context: "IP Engineering Department, Subisu Cablenet Pvt. Ltd.",
+          period: "Bhadra 2074 (Aug/Sep 2017)",
+          details:
+            "Received certificate of appreciation from CEO Binaya M. Saud for service quality and reliability.",
+        },
+      ],
+    },
+  ];
+
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -251,15 +310,21 @@ const CVPage: React.FC = () => {
             </p>
             <Highlights>
               <HighlightItem>
-                <i className='fas fa-globe'></i>
+                <HighlightIcon>
+                  <PublicRounded />
+                </HighlightIcon>
                 <span>Remote Work Expert - Australia-based company</span>
               </HighlightItem>
               <HighlightItem>
-                <i className='fas fa-code'></i>
+                <HighlightIcon>
+                  <AutoAwesomeRounded />
+                </HighlightIcon>
                 <span>Full-Stack & Blockchain Development</span>
               </HighlightItem>
               <HighlightItem>
-                <i className='fas fa-rocket'></i>
+                <HighlightIcon>
+                  <RocketLaunchRounded />
+                </HighlightIcon>
                 <span>Self-taught Developer with Diverse Background</span>
               </HighlightItem>
             </Highlights>
@@ -301,7 +366,7 @@ const CVPage: React.FC = () => {
               <ExperienceItem key={index}>
                 <ExperienceHeader>
                   <h4>{experience.title}</h4>
-                  <div className='meta-info'>
+                  <div className="meta-info">
                     <Company>{experience.company}</Company>
                     <Location>{experience.location}</Location>
                     <Duration>{experience.duration}</Duration>
@@ -325,9 +390,9 @@ const CVPage: React.FC = () => {
                 Bachelor of Science, Computer Science and Information Technology
                 (BSc CSIT)
               </h4>
-              <Company>Tribhuwan University</Company> •{' '}
+              <Company>Tribhuwan University</Company> •{" "}
               <Duration>2016 - 2022</Duration>
-              <p style={{ marginTop: '12px' }}>
+              <p style={{ marginTop: "12px" }}>
                 Completed comprehensive coursework in software engineering, data
                 structures, algorithms, database systems, and web development.
                 Final year project focused on full-stack web development using
@@ -347,37 +412,32 @@ const CVPage: React.FC = () => {
           <SectionTitle>Certifications & Achievements</SectionTitle>
           <SectionContent>
             <AchievementsGrid>
-              <AchievementItem>
-                <i className='fas fa-certificate'></i>
-                <AchievementContent>
-                  <h4>Professional Certifications</h4>
-                  <ul>
-                    <li>
-                      <strong>Build web app with reactjs</strong> -
-                      OpenClassrooms (Issued Jul 2019)
-                    </li>
-                  </ul>
-                </AchievementContent>
-              </AchievementItem>
+              {credentialCards.map((card) => (
+                <AchievementItem key={card.title}>
+                  <AchievementHeader>
+                    <AchievementIcon>{card.icon}</AchievementIcon>
+                    <AchievementTitleGroup>
+                      <h4>{card.title}</h4>
+                      <p>{card.subtitle}</p>
+                    </AchievementTitleGroup>
+                  </AchievementHeader>
 
-              <AchievementItem>
-                <i className='fas fa-award'></i>
-                <AchievementContent>
-                  <h4>Professional Awards</h4>
-                  <ul>
-                    <li>
-                      <strong>
-                        Best Employee of the Month - Evening Shift
-                      </strong>
-                    </li>
-                    <li>IP - Engineering Department</li>
-                    <li>
-                      Subisu Cablenet Pvt. Ltd. (Bhadra 2074 - Aug/Sep 2017)
-                    </li>
-                    <li>Certificate of Appreciation from CEO Binaya M. Saud</li>
-                  </ul>
-                </AchievementContent>
-              </AchievementItem>
+                  <AchievementList>
+                    {card.items.map((item) => (
+                      <AchievementListItem key={item.title}>
+                        <AchievementItemTitle>
+                          {item.title}
+                        </AchievementItemTitle>
+                        <AchievementMeta>
+                          <span>{item.context}</span>
+                          <small>{item.period}</small>
+                        </AchievementMeta>
+                        <AchievementDetails>{item.details}</AchievementDetails>
+                      </AchievementListItem>
+                    ))}
+                  </AchievementList>
+                </AchievementItem>
+              ))}
             </AchievementsGrid>
           </SectionContent>
         </Section>
@@ -386,90 +446,23 @@ const CVPage: React.FC = () => {
         <Section>
           <SectionTitle>Current Focus & Goals</SectionTitle>
           <SectionContent>
-            <ul style={{ listStyle: 'none' }}>
-              <li
-                style={{
-                  marginBottom: '12px',
-                  paddingLeft: '20px',
-                  position: 'relative',
-                }}
-              >
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: '0',
-                    color: '#667eea',
-                  }}
-                >
-                  ▶
-                </span>
-                <strong>Learning:</strong> Currently studying Rust and Python
-                with Neovim for data science
-              </li>
-              <li
-                style={{
-                  marginBottom: '12px',
-                  paddingLeft: '20px',
-                  position: 'relative',
-                }}
-              >
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: '0',
-                    color: '#667eea',
-                  }}
-                >
-                  ▶
-                </span>
-                <strong>Goal:</strong> Building everything with Rust - expanding
-                into systems-level development
-              </li>
-              <li
-                style={{
-                  marginBottom: '12px',
-                  paddingLeft: '20px',
-                  position: 'relative',
-                }}
-              >
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: '0',
-                    color: '#667eea',
-                  }}
-                >
-                  ▶
-                </span>
-                <strong>Expertise:</strong> Available for consultation on React,
-                Node.js, JavaScript, and TypeScript
-              </li>
-              <li
-                style={{
-                  marginBottom: '12px',
-                  paddingLeft: '20px',
-                  position: 'relative',
-                }}
-              >
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: '0',
-                    color: '#667eea',
-                  }}
-                >
-                  ▶
-                </span>
-                <strong>Growth:</strong> Continuously expanding skillset in both
-                frontend and backend technologies
-              </li>
-            </ul>
+            <FocusGrid>
+              {currentFocusItems.map((item) => (
+                <FocusCard key={item.title}>
+                  <FocusIcon>{item.icon}</FocusIcon>
+                  <FocusContent>
+                    <h4>{item.title}</h4>
+                    <p>{item.text}</p>
+                  </FocusContent>
+                </FocusCard>
+              ))}
+            </FocusGrid>
           </SectionContent>
         </Section>
 
         {/* PDF Download Button */}
-        <PDFButton onClick={handleDownloadPDF} title='Download as PDF'>
-          <i className='fas fa-download'></i>
+        <PDFButton onClick={handleDownloadPDF} title="Download as PDF">
+          <i className="fas fa-download"></i>
         </PDFButton>
       </CVContainer>
     </>
@@ -480,10 +473,15 @@ const CVPage: React.FC = () => {
 const CVContainer = styled.div<{ $isVisible: boolean }>`
   max-width: 8.5in;
   margin: 20px auto;
-  background: var(--background-dark-color);
+  background: linear-gradient(
+    145deg,
+    var(--background-dark-color),
+    var(--sidebar-dark-color)
+  );
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   opacity: ${(props) => (props.$isVisible ? 1 : 0)};
-  transform: translateY(${(props) => (props.$isVisible ? '0' : '20px')});
+  transform: translateY(${(props) => (props.$isVisible ? "0" : "20px")});
   transition: all 0.6s ease;
   border-radius: 15px;
   overflow: hidden;
@@ -513,12 +511,32 @@ const CVContainer = styled.div<{ $isVisible: boolean }>`
 `;
 
 const Header = styled.header`
-  background: var(--background-dark-color);
+  background: linear-gradient(
+    120deg,
+    rgba(77, 163, 255, 0.18),
+    rgba(16, 18, 26, 0.2)
+  );
   color: var(--white-color);
   padding: 35px 40px 30px 40px;
   border-bottom: 1px solid var(--border-color);
   position: relative;
   overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 14rem;
+    height: 14rem;
+    border-radius: 50%;
+    right: -4rem;
+    top: -8rem;
+    background: radial-gradient(
+      circle,
+      rgba(77, 163, 255, 0.35) 0%,
+      rgba(77, 163, 255, 0) 72%
+    );
+    pointer-events: none;
+  }
 
   @media print {
     background: #f8f9fa !important;
@@ -681,7 +699,7 @@ const ContactItem = styled.div`
     }
 
     &:not(:last-child)::after {
-      content: ' • ';
+      content: " • ";
       color: #666;
       margin-left: 6px;
     }
@@ -801,26 +819,26 @@ const SkillsList = styled.div`
 `;
 
 const SkillTag = styled.span<{ $isPrimary?: boolean; $delay?: number }>`
-  font-weight: ${(props) => (props.$isPrimary ? '600' : '400')};
+  font-weight: ${(props) => (props.$isPrimary ? "600" : "400")};
   color: ${(props) =>
-    props.$isPrimary ? 'var(--white-color)' : 'var(--white-color-2)'};
+    props.$isPrimary ? "var(--white-color)" : "var(--white-color-2)"};
   display: inline;
   margin-right: 4px;
 
   &:not(:last-child)::after {
-    content: ' • ';
+    content: " • ";
     color: var(--border-color);
     font-weight: normal;
     margin: 0 6px;
   }
 
   &:last-child::after {
-    content: '';
+    content: "";
   }
 
   @media print {
     font-size: 0.85em !important;
-    color: ${(props) => (props.$isPrimary ? 'black' : '#666')} !important;
+    color: ${(props) => (props.$isPrimary ? "black" : "#666")} !important;
 
     &:not(:last-child)::after {
       margin: 0 4px !important;
@@ -990,12 +1008,6 @@ const HighlightItem = styled.div`
     box-shadow: 0 6px 15px rgba(102, 126, 234, 0.15);
   }
 
-  i {
-    color: var(--primary-color);
-    margin-right: 10px;
-    font-size: 1.1em;
-  }
-
   span {
     color: var(--white-color-2);
     font-weight: 500;
@@ -1012,58 +1024,67 @@ const HighlightItem = styled.div`
   }
 `;
 
-const AchievementsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  margin-top: 20px;
+const HighlightIcon = styled.span`
+  color: var(--primary-color);
+  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  svg {
+    font-size: 1.15rem;
   }
 
   @media print {
-    gap: 20px !important;
-    margin-top: 15px !important;
+    color: #333 !important;
+  }
+`;
+
+const AchievementsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  @media print {
+    gap: 10px !important;
+    margin-top: 8px !important;
   }
 `;
 
 const AchievementItem = styled.div`
-  display: flex;
-  align-items: flex-start;
-  background: var(--background-light-color-2);
-  padding: 25px;
-  border-radius: 12px;
-  border-left: 4px solid var(--primary-color);
+  display: grid;
+  gap: 0.85rem;
+  background: linear-gradient(
+    130deg,
+    rgba(77, 163, 255, 0.13),
+    rgba(77, 163, 255, 0.04)
+  );
+  padding: 1rem;
+  border-radius: 0.95rem;
+  border: 1px solid var(--border-color);
+  border-top: 3px solid var(--primary-color);
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(102, 126, 234, 0.15);
-    border-left-width: 6px;
-
-    i {
-      transform: scale(1.1);
-      color: var(--primary-color-light);
-    }
-  }
-
-  i {
-    color: var(--primary-color);
-    font-size: 1.8em;
-    margin-right: 20px;
-    margin-top: 8px;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(77, 163, 255, 0.14);
+    border-color: var(--primary-color-light);
   }
 
   @media print {
     background: #f8f9ff !important;
-    padding: 20px !important;
-    border-radius: 8px !important;
+    padding: 10px !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
+    border: 1px solid #d6d6d6 !important;
+    border-top: 2px solid #333 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     page-break-inside: avoid;
@@ -1072,101 +1093,161 @@ const AchievementItem = styled.div`
     &:hover {
       transform: none !important;
     }
-
-    i {
-      font-size: 1.5em !important;
-      margin-right: 15px !important;
-      color: #333 !important;
-    }
   }
 
   @media (max-width: 768px) {
-    padding: 20px;
+    padding: 0.9rem;
+  }
+`;
 
-    i {
-      font-size: 1.6em;
-      margin-right: 15px;
+const AchievementHeader = styled.div`
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.7rem;
+  align-items: center;
+`;
+
+const AchievementIcon = styled.span`
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.62rem;
+  background: rgba(77, 163, 255, 0.2);
+  border: 1px solid rgba(77, 163, 255, 0.34);
+
+  svg {
+    font-size: 1.06rem;
+  }
+
+  ${AchievementItem}:hover & {
+    transform: scale(1.1);
+    color: var(--primary-color-light);
+  }
+
+  @media print {
+    color: #333 !important;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+    border-radius: 0 !important;
+    background: #ededed !important;
+    border: 1px solid #ccc !important;
+
+    svg {
+      font-size: 0.9rem !important;
     }
   }
 `;
 
-const AchievementContent = styled.div`
-  flex: 1;
-
+const AchievementTitleGroup = styled.div`
   h4 {
     color: var(--white-color);
-    margin-bottom: 15px;
-    font-weight: 600;
-    font-size: 1.3em;
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 8px;
-    display: inline-block;
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: 0.02rem;
 
     @media print {
       color: #000 !important;
-      font-size: 1.1em !important;
-      margin-bottom: 12px !important;
-      border-bottom: 2px solid #333 !important;
+      font-size: 0.9rem !important;
     }
   }
 
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  li {
-    color: var(--white-color-2);
-    margin-bottom: 8px;
-    padding-left: 20px;
-    position: relative;
-    transition: color 0.3s ease;
-    line-height: 1.5;
-
-    &::before {
-      content: '✓';
-      position: absolute;
-      left: 0;
-      color: var(--primary-color);
-      font-weight: bold;
-      font-size: 1.1em;
-    }
-
-    strong {
-      color: var(--white-color);
-      font-weight: 600;
-    }
+  p {
+    color: var(--font-light-color);
+    font-size: 0.82rem;
+    margin-top: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
 
     @media print {
-      color: #666 !important;
-      margin-bottom: 6px !important;
-      font-size: 0.9em !important;
-
-      &::before {
-        color: #333 !important;
-      }
-
-      strong {
-        color: #000 !important;
-      }
+      color: #555 !important;
+      font-size: 0.72rem !important;
+      margin-top: 0 !important;
     }
   }
+`;
 
-  ${AchievementItem}:hover & li {
+const AchievementList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+`;
+
+const AchievementListItem = styled.li`
+  border: 1px solid rgba(164, 172, 196, 0.25);
+  border-radius: 0.7rem;
+  background-color: rgba(16, 18, 26, 0.2);
+  padding: 0.65rem 0.7rem;
+
+  @media print {
+    border: 1px solid #ddd !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    padding: 6px !important;
+  }
+`;
+
+const AchievementItemTitle = styled.p`
+  color: var(--white-color);
+  font-weight: 600;
+  font-size: 0.93rem;
+  margin-bottom: 0.28rem;
+
+  @media print {
+    color: #000 !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 2px !important;
+  }
+`;
+
+const AchievementMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.3rem;
+
+  span,
+  small {
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 0.26rem 0.46rem;
+    border-radius: 999px;
+    background-color: rgba(77, 163, 255, 0.2);
+    border: 1px solid rgba(77, 163, 255, 0.3);
     color: var(--white-color);
   }
 
-  @media (max-width: 768px) {
-    h4 {
-      font-size: 1.2em;
-      margin-bottom: 12px;
-    }
+  @media print {
+    margin-bottom: 2px !important;
 
-    li {
-      margin-bottom: 6px;
-      font-size: 0.95em;
+    span,
+    small {
+      font-size: 0.68rem !important;
+      border-radius: 0 !important;
+      border: 1px solid #d3d3d3 !important;
+      background: #f4f4f4 !important;
+      color: #444 !important;
+      padding: 2px 4px !important;
     }
+  }
+`;
+
+const AchievementDetails = styled.p`
+  color: var(--font-light-color);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  margin: 0;
+
+  @media print {
+    color: #555 !important;
+    font-size: 0.75rem !important;
+    line-height: 1.35 !important;
   }
 `;
 
@@ -1200,6 +1281,105 @@ const PDFButton = styled.button`
 
   @media print {
     display: none !important;
+  }
+`;
+
+const FocusGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+
+  @media print {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+`;
+
+const FocusCard = styled.article`
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.8rem;
+  background: linear-gradient(
+    125deg,
+    rgba(77, 163, 255, 0.12),
+    rgba(77, 163, 255, 0.03)
+  );
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-color-light);
+  }
+
+  @media print {
+    background: #f8f9ff !important;
+    border: 1px solid #ddd !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    break-inside: avoid;
+  }
+`;
+
+const FocusContent = styled.div`
+  line-height: 1.5;
+
+  h4 {
+    color: var(--white-color);
+    font-size: 0.96rem;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+  }
+
+  p {
+    color: var(--white-color-2);
+    font-size: 0.92rem;
+  }
+
+  @media print {
+    h4 {
+      color: #000 !important;
+      font-size: 0.85rem !important;
+      margin-bottom: 0.1rem !important;
+    }
+
+    p {
+      color: #555 !important;
+      font-size: 0.8rem !important;
+      line-height: 1.35 !important;
+      margin: 0 !important;
+    }
+  }
+`;
+
+const FocusIcon = styled.span`
+  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.6rem;
+  background-color: rgba(77, 163, 255, 0.2);
+  border: 1px solid rgba(77, 163, 255, 0.35);
+
+  svg {
+    font-size: 1.05rem;
+  }
+
+  @media print {
+    width: 1.3rem !important;
+    height: 1.3rem !important;
+    border-radius: 0 !important;
+    background: #ededed !important;
+    border: 1px solid #ccc !important;
+    color: #333 !important;
   }
 `;
 
