@@ -156,11 +156,13 @@ const App: React.FC<AppProps> = ({ children }) => {
 
 const MainContentStyled = styled.main`
   position: relative;
-  margin-left: 16.3rem;
+  margin-left: 0;
+  margin-top: 6.1rem;
   min-height: 100vh;
 
   @media screen and (max-width: 1200px) {
-    margin-left: 0;
+    margin-top: 0;
+    padding-top: 3.8rem;
   }
 
   .lines {
