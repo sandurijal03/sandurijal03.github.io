@@ -1,65 +1,141 @@
 import * as React from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 import avatar from "../img/dp.jpeg";
 
-const Navigation = () => {
+type NavigationProps = {
+  onNavigate?: () => void;
+};
+
+const sections = [
+  { id: "home", label: "Home" },
+  { id: "resume", label: "Resume" },
+  { id: "portfolio", label: "Portfolio" },
+  { id: "contact", label: "Contact" },
+];
+
+const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
+  const [activeHash, setActiveHash] = React.useState(
+    window.location.hash || "#home",
+  );
+
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      setActiveHash(window.location.hash || "#home");
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const updateActiveFromScroll = () => {
+      if (window.location.pathname !== "/") {
+        return;
+      }
+
+      const topOffset = window.innerWidth <= 1200 ? 95 : 128;
+      let currentSectionId = "home";
+
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+
+        if (!element) {
+          continue;
+        }
+
+        const { top } = element.getBoundingClientRect();
+
+        if (top - topOffset <= 0) {
+          currentSectionId = section.id;
+        }
+      }
+
+      const nextHash = `#${currentSectionId}`;
+
+      setActiveHash((previousHash) =>
+        previousHash === nextHash ? previousHash : nextHash,
+      );
+
+      if (window.location.hash !== nextHash) {
+        window.history.replaceState(null, "", `/${nextHash}`);
+      }
+    };
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (ticking) {
+        return;
+      }
+
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        updateActiveFromScroll();
+        ticking = false;
+      });
+    };
+
+    updateActiveFromScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
+  const handleLinkClick = (sectionId: string) => {
+    const targetElement = document.getElementById(sectionId);
+
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.replaceState(null, "", `/#${sectionId}`);
+      setActiveHash(`#${sectionId}`);
+    }
+
+    if (onNavigate) {
+      onNavigate();
+    }
+  };
+
   return (
     <NavigationStyled>
       <div className="avatar">
         <img src={avatar} alt="" />
       </div>
       <ul className="nav-items">
-        <li className="nav-item">
-          <NavLink
-            className={({ isActive }) => (isActive ? "active-class" : "")}
-            to="/"
-          >
-            Home
-          </NavLink>
-        </li>
-        {/* <li className='nav-item'>
-          <NavLink
-            className={({ isActive }) => (isActive ? 'active-class' : '')}
-            to='/about'
-          >
-            About
-          </NavLink>
-        </li> */}
-        <li className="nav-item">
-          <NavLink
-            className={({ isActive }) => (isActive ? "active-class" : "")}
-            to="/resume"
-          >
-            Resume
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className={({ isActive }) => (isActive ? "active-class" : "")}
-            to="/cv"
-          >
-            CV
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink
-            className={({ isActive }) => (isActive ? "active-class" : "")}
-            to="/works"
-          >
-            Portfolio
-          </NavLink>
-        </li>
-
-        <li className="nav-item">
-          <NavLink
-            className={({ isActive }) => (isActive ? "active-class" : "")}
-            to="/contact"
-          >
-            Contact
-          </NavLink>
-        </li>
+        {sections.map((section) => (
+          <li className="nav-item" key={section.id}>
+            <a
+              className={activeHash === `#${section.id}` ? "active-class" : ""}
+              href={`/#${section.id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                handleLinkClick(section.id);
+              }}
+            >
+              {section.label}
+            </a>
+          </li>
+        ))}
       </ul>
+      <DownloadCvButton
+        href="/cv?download=1"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => {
+          if (onNavigate) {
+            onNavigate();
+          }
+        }}
+      >
+        Download CV
+      </DownloadCvButton>
       <footer className="footer">
         <p>@{new Date().getFullYear()} My Portfolio</p>
       </footer>
@@ -191,6 +267,36 @@ const NavigationStyled = styled.nav`
         font-size: 0.82rem;
       }
     }
+  }
+`;
+
+const DownloadCvButton = styled.a`
+  border: 1px solid var(--primary-color);
+  background: linear-gradient(
+    125deg,
+    var(--primary-color),
+    var(--primary-color-light)
+  );
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.52rem 0.95rem;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+  }
+
+  @media screen and (max-width: 1200px) {
+    text-align: center;
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.9rem;
   }
 `;
 

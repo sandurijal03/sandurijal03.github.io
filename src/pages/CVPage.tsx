@@ -251,6 +251,21 @@ const CVPage: React.FC = () => {
     setIsVisible(true);
   }, []);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const shouldAutoDownload = searchParams.get("download") === "1";
+
+    if (!shouldAutoDownload) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      window.print();
+    }, 450);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   const handleDownloadPDF = () => {
     window.print();
   };

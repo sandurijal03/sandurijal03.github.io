@@ -5,14 +5,13 @@ import Menu from "@mui/icons-material/Menu";
 import { IconButton, Switch as MUSwitch } from "@mui/material";
 
 import Sidebar from "./components/Sidebar";
-const AboutPage = React.lazy(() => import("./pages/AboutPage"));
-const BlogsPage = React.lazy(() => import("./pages/BlogsPage"));
-const ContactPage = React.lazy(() => import("./pages/ContactPage"));
-const HomePage = React.lazy(() => import("./pages/HomePage"));
-const PortfolioPage = React.lazy(() => import("./pages/PortfolioPage"));
-const ResumePage = React.lazy(() => import("./pages/ResumePage"));
 const CVPage = React.lazy(() => import("./pages/CVPage"));
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+const SinglePage = React.lazy(() => import("./pages/SinglePage"));
+import {
+  Navigate,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 
 export const Main = () => {
   const router = createBrowserRouter(
@@ -22,50 +21,26 @@ export const Main = () => {
         element: (
           <App>
             <React.Suspense fallback={<div>Loading...</div>}>
-              <HomePage />
+              <SinglePage />
             </React.Suspense>
           </App>
         ),
       },
       {
         path: "/works",
-        element: (
-          <App>
-            <React.Suspense fallback={<div>Loading...</div>}>
-              <PortfolioPage />
-            </React.Suspense>
-          </App>
-        ),
+        element: <Navigate to="/#portfolio" replace />,
       },
       {
         path: "/blogs",
-        element: (
-          <App>
-            <React.Suspense fallback={<div>Loading...</div>}>
-              <BlogsPage />
-            </React.Suspense>
-          </App>
-        ),
+        element: <Navigate to="/#portfolio" replace />,
       },
       {
         path: "/resume",
-        element: (
-          <App>
-            <React.Suspense fallback={<div>Loading...</div>}>
-              <ResumePage />
-            </React.Suspense>
-          </App>
-        ),
+        element: <Navigate to="/#resume" replace />,
       },
       {
         path: "/contact",
-        element: (
-          <App>
-            <React.Suspense fallback={<div>Loading...</div>}>
-              <ContactPage />
-            </React.Suspense>
-          </App>
-        ),
+        element: <Navigate to="/#contact" replace />,
       },
       {
         path: "/cv",
@@ -79,11 +54,7 @@ export const Main = () => {
       },
       {
         path: "*",
-        element: (
-          <App>
-            <h1>404! Page Not Found</h1>
-          </App>
-        ),
+        element: <Navigate to="/" replace />,
       },
     ],
     {
@@ -118,7 +89,7 @@ const App: React.FC<AppProps> = ({ children }) => {
 
   return (
     <div className="App">
-      <Sidebar navToggle={navToggle} />
+      <Sidebar navToggle={navToggle} onNavigate={() => setNavToggle(false)} />
       <div className="theme">
         <div className="lightDarkMode">
           <div className="leftContent">
