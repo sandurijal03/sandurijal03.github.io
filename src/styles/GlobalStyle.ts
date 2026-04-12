@@ -73,6 +73,20 @@ const GlobalStyled = createGlobalStyle`
     --resume-timeline-item-hover-border: rgba(0, 96, 199, 0.34);
     --resume-timeline-badge-bg: rgba(0, 96, 199, 0.12);
     --resume-timeline-badge-border: rgba(0, 96, 199, 0.28);
+    --resume-3d-primary: #0f5cb4;
+    --resume-3d-secondary: #54a1ff;
+    --resume-3d-wire: #4f95e3;
+    --resume-3d-particles: #2a6ab3;
+    --resume-3d-fog: #e9f2fd;
+    --resume-3d-light-a: #2f80df;
+    --resume-3d-light-b: #70b5ff;
+    --resume-experience-3d-primary: #1f6fc5;
+    --resume-experience-3d-secondary: #68afff;
+    --resume-experience-3d-trail: #3f8bdc;
+    --resume-experience-3d-particle: #2f73c0;
+    --resume-experience-3d-fog: #eaf3fe;
+    --resume-experience-3d-overlay-start: rgba(255, 255, 255, 0.66);
+    --resume-experience-3d-overlay-end: rgba(255, 255, 255, 0.9);
   }
 
   .darkTheme{
@@ -127,6 +141,20 @@ const GlobalStyled = createGlobalStyle`
     --resume-timeline-item-hover-border: rgba(77, 163, 255, 0.55);
     --resume-timeline-badge-bg: rgba(77, 163, 255, 0.18);
     --resume-timeline-badge-border: rgba(77, 163, 255, 0.35);
+    --resume-3d-primary: #4da3ff;
+    --resume-3d-secondary: #9ad0ff;
+    --resume-3d-wire: #69b4ff;
+    --resume-3d-particles: #7cbfff;
+    --resume-3d-fog: #101823;
+    --resume-3d-light-a: #63adff;
+    --resume-3d-light-b: #2f7dd1;
+    --resume-experience-3d-primary: #67b6ff;
+    --resume-experience-3d-secondary: #9bd4ff;
+    --resume-experience-3d-trail: #6db7ff;
+    --resume-experience-3d-particle: #7abfff;
+    --resume-experience-3d-fog: #101823;
+    --resume-experience-3d-overlay-start: rgba(16, 18, 26, 0.34);
+    --resume-experience-3d-overlay-end: rgba(16, 18, 26, 0.74);
   }
 
 

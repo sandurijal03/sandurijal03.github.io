@@ -16,6 +16,13 @@ import {
 } from "../data/resume";
 import { MainLayout } from "../styles/Layouts";
 
+const LazyResumeHeroThreeScene = React.lazy(
+  () => import("../components/ResumeHeroThreeScene"),
+);
+const LazyResumeExperienceThreeScene = React.lazy(
+  () => import("../components/ResumeExperienceThreeScene"),
+);
+
 type SkillWithCategory = Skill & {
   category: string;
 };
@@ -57,6 +64,38 @@ const getCategoryIcon = (category: string) => {
 };
 
 const ResumePage = () => {
+  const [showHeroScene, setShowHeroScene] = React.useState(false);
+  const [showExperienceScene, setShowExperienceScene] = React.useState(false);
+  const [activeExperienceIndex, setActiveExperienceIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const shouldEnableScene = window.matchMedia("(min-width: 760px)").matches;
+
+    if (!shouldEnableScene) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setShowHeroScene(true);
+    }, 240);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  React.useEffect(() => {
+    const shouldEnableScene = window.matchMedia("(min-width: 900px)").matches;
+
+    if (!shouldEnableScene) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setShowExperienceScene(true);
+    }, 420);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   const yearsOfExperience = Math.max(1, new Date().getFullYear() - 2017);
   const allSkills = React.useMemo<SkillWithCategory[]>(() => {
     const flattenedSkills: SkillWithCategory[] = [];
@@ -119,24 +158,35 @@ const ResumePage = () => {
     <ResumePageStyled>
       <MainLayout>
         <HeroCard>
-          <Kicker>Curriculum Vitae</Kicker>
-          <NameTitle>{personalInfo.name}</NameTitle>
-          <Headline>{personalInfo.title}</Headline>
-          <Summary>{personalInfo.tagline}</Summary>
-          <QuickFacts>
-            <QuickFactCard>
-              <QuickFactValue>{yearsOfExperience}+</QuickFactValue>
-              <QuickFactLabel>Years in tech</QuickFactLabel>
-            </QuickFactCard>
-            <QuickFactCard>
-              <QuickFactValue>{workExperience.length}</QuickFactValue>
-              <QuickFactLabel>Professional roles</QuickFactLabel>
-            </QuickFactCard>
-            <QuickFactCard>
-              <QuickFactValue>{allSkills.length}</QuickFactValue>
-              <QuickFactLabel>Core skills tracked</QuickFactLabel>
-            </QuickFactCard>
-          </QuickFacts>
+          <HeroSceneLayer>
+            {showHeroScene ? (
+              <React.Suspense fallback={null}>
+                <LazyResumeHeroThreeScene
+                  activeCategory={spotlightSkill?.category}
+                />
+              </React.Suspense>
+            ) : null}
+          </HeroSceneLayer>
+          <HeroContent>
+            <Kicker>Curriculum Vitae</Kicker>
+            <NameTitle>{personalInfo.name}</NameTitle>
+            <Headline>{personalInfo.title}</Headline>
+            <Summary>{personalInfo.tagline}</Summary>
+            <QuickFacts>
+              <QuickFactCard>
+                <QuickFactValue>{yearsOfExperience}+</QuickFactValue>
+                <QuickFactLabel>Years in tech</QuickFactLabel>
+              </QuickFactCard>
+              <QuickFactCard>
+                <QuickFactValue>{workExperience.length}</QuickFactValue>
+                <QuickFactLabel>Professional roles</QuickFactLabel>
+              </QuickFactCard>
+              <QuickFactCard>
+                <QuickFactValue>{allSkills.length}</QuickFactValue>
+                <QuickFactLabel>Core skills tracked</QuickFactLabel>
+              </QuickFactCard>
+            </QuickFacts>
+          </HeroContent>
         </HeroCard>
 
         <ResumeGrid>
@@ -207,29 +257,47 @@ const ResumePage = () => {
           </LeftColumn>
 
           <RightColumn>
-            <Panel as="section">
-              <SectionHeading>
-                <PanelTitle>Experience</PanelTitle>
-                <SectionMeta>Career highlights and impact</SectionMeta>
-              </SectionHeading>
-              <Timeline>
-                {workExperience.map((experience) => (
-                  <TimelineItem key={experience.id}>
-                    <TimelineMeta>
-                      <TimelineBadge>{experience.duration}</TimelineBadge>
-                      {experience.location && (
-                        <TimelineBadge>{experience.location}</TimelineBadge>
-                      )}
-                    </TimelineMeta>
-                    <TimelineTitle>{experience.title}</TimelineTitle>
-                    <TimelineSubtitle>{experience.company}</TimelineSubtitle>
-                    <TimelineText>
-                      {shortenText(experience.description)}
-                    </TimelineText>
-                  </TimelineItem>
-                ))}
-              </Timeline>
-            </Panel>
+            <ExperiencePanel as="section">
+              <ExperienceSceneLayer>
+                {showExperienceScene ? (
+                  <React.Suspense fallback={null}>
+                    <LazyResumeExperienceThreeScene
+                      itemCount={workExperience.length}
+                      activeIndex={activeExperienceIndex}
+                    />
+                  </React.Suspense>
+                ) : null}
+              </ExperienceSceneLayer>
+              <PanelContent>
+                <SectionHeading>
+                  <PanelTitle>Experience</PanelTitle>
+                  <SectionMeta>Career highlights and impact</SectionMeta>
+                </SectionHeading>
+                <Timeline>
+                  {workExperience.map((experience, index) => (
+                    <TimelineItem
+                      key={experience.id}
+                      $isActive={activeExperienceIndex === index}
+                      onMouseEnter={() => setActiveExperienceIndex(index)}
+                      onFocus={() => setActiveExperienceIndex(index)}
+                      tabIndex={0}
+                    >
+                      <TimelineMeta>
+                        <TimelineBadge>{experience.duration}</TimelineBadge>
+                        {experience.location && (
+                          <TimelineBadge>{experience.location}</TimelineBadge>
+                        )}
+                      </TimelineMeta>
+                      <TimelineTitle>{experience.title}</TimelineTitle>
+                      <TimelineSubtitle>{experience.company}</TimelineSubtitle>
+                      <TimelineText>
+                        {shortenText(experience.description)}
+                      </TimelineText>
+                    </TimelineItem>
+                  ))}
+                </Timeline>
+              </PanelContent>
+            </ExperiencePanel>
 
             <Panel as="section">
               <SectionHeading>
@@ -292,6 +360,17 @@ const HeroCard = styled.section`
   @media screen and (max-width: 760px) {
     padding: 1.8rem;
   }
+`;
+
+const HeroSceneLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+`;
+
+const HeroContent = styled.div`
+  position: relative;
+  z-index: 1;
 `;
 
 const Kicker = styled.p`
@@ -387,6 +466,36 @@ const Panel = styled.div`
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--resume-panel-shadow);
+`;
+
+const ExperiencePanel = styled(Panel)`
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      160deg,
+      var(--resume-experience-3d-overlay-start),
+      var(--resume-experience-3d-overlay-end)
+    );
+  }
+`;
+
+const ExperienceSceneLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+`;
+
+const PanelContent = styled.div`
+  position: relative;
+  z-index: 1;
 `;
 
 const PanelTitle = styled.h3`
@@ -575,15 +684,17 @@ const Timeline = styled.div`
   }
 `;
 
-const TimelineItem = styled.article`
+const TimelineItem = styled.article<{ $isActive?: boolean }>`
   background-color: var(--resume-timeline-item-bg);
   border: 1px solid var(--resume-timeline-item-border);
   border-radius: 0.85rem;
   padding: 1.15rem;
   position: relative;
+  outline: none;
   transition:
     transform 0.25s ease,
-    border-color 0.25s ease;
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 
   &::before {
     content: "";
@@ -600,6 +711,19 @@ const TimelineItem = styled.article`
   &:hover {
     transform: translateY(-2px);
     border-color: var(--resume-timeline-item-hover-border);
+  }
+
+  ${(props) =>
+    props.$isActive
+      ? `
+    border-color: var(--resume-timeline-item-hover-border);
+    box-shadow: 0 0 0 1px var(--resume-timeline-item-hover-border);
+  `
+      : ""}
+
+  &:focus-visible {
+    border-color: var(--resume-timeline-item-hover-border);
+    box-shadow: 0 0 0 2px var(--resume-timeline-item-hover-border);
   }
 
   @media screen and (max-width: 760px) {
