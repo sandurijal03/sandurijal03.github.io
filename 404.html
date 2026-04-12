@@ -18,6 +18,11 @@
       var pathSegmentsToKeep = 0;
 
       var l = window.location;
+      var search =
+        l.search && l.search.length > 1
+          ? "&" + l.search.slice(1).replace(/&/g, "~and~")
+          : "";
+
       l.replace(
         l.protocol +
           "//" +
@@ -34,6 +39,6 @@
             .slice(pathSegmentsToKeep)
             .join("/")
             .replace(/&/g, "~and~") +
-          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+          search +
           l.hash,
       );</script></head><body></body></html>
