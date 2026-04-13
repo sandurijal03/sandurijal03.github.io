@@ -5,7 +5,6 @@ import Menu from "@mui/icons-material/Menu";
 import { IconButton, Switch as MUSwitch } from "@mui/material";
 
 import Sidebar from "./components/Sidebar";
-const CVPage = React.lazy(() => import("./pages/CVPage"));
 const SinglePage = React.lazy(() => import("./pages/SinglePage"));
 import {
   Navigate,
@@ -44,13 +43,7 @@ export const Main = () => {
       },
       {
         path: "/cv",
-        element: (
-          <App>
-            <React.Suspense fallback={<div>Loading...</div>}>
-              <CVPage />
-            </React.Suspense>
-          </App>
-        ),
+        element: <Navigate to="/#resume" replace />,
       },
       {
         path: "*",

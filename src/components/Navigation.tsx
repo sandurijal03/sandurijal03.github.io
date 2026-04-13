@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import avatar from "../img/dp.jpeg";
+import { downloadCvPdf } from "../utils/downloadCvPdf";
 
 type NavigationProps = {
   onNavigate?: () => void;
@@ -125,10 +126,9 @@ const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
         ))}
       </ul>
       <DownloadCvButton
-        href="/cv?download=1"
-        target="_blank"
-        rel="noreferrer"
+        type="button"
         onClick={() => {
+          downloadCvPdf();
           if (onNavigate) {
             onNavigate();
           }
@@ -270,7 +270,7 @@ const NavigationStyled = styled.nav`
   }
 `;
 
-const DownloadCvButton = styled.a`
+const DownloadCvButton = styled.button`
   border: 1px solid var(--primary-color);
   background: linear-gradient(
     125deg,
@@ -278,6 +278,8 @@ const DownloadCvButton = styled.a`
     var(--primary-color-light)
   );
   color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
   font-size: 0.76rem;

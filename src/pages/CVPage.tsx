@@ -22,7 +22,7 @@ import {
 const PrintStyles = createGlobalStyle`
   @media print {
     @page {
-      margin: 0.2in;
+      margin: 0.12in;
       size: A4;
     }
     
@@ -34,8 +34,8 @@ const PrintStyles = createGlobalStyle`
     }
     
     html, body {
-      font-size: 10px !important;
-      line-height: 1.3 !important;
+      font-size: 9px !important;
+      line-height: 1.2 !important;
       color: #000 !important;
       background: white !important;
       margin: 0 !important;
@@ -91,48 +91,49 @@ const PrintStyles = createGlobalStyle`
 
     /* Typography improvements */
     h1 {
-      font-size: 18px !important;
+      font-size: 16px !important;
       font-weight: 700 !important;
-      margin-bottom: 4px !important;
+      margin-bottom: 2px !important;
       color: #000 !important;
     }
 
     h2 {
-      font-size: 11px !important;
+      font-size: 10px !important;
       font-weight: 600 !important;
       color: #333 !important;
       text-transform: uppercase !important;
       letter-spacing: 0.5px !important;
-      margin-bottom: 6px !important;
+      margin-bottom: 3px !important;
     }
 
     h3 {
-      font-size: 12px !important;
+      font-size: 10.5px !important;
       font-weight: 600 !important;
       color: #000 !important;
-      margin-bottom: 8px !important;
+      margin-bottom: 4px !important;
       border-bottom: 1px solid #333 !important;
-      padding-bottom: 3px !important;
+      padding-bottom: 2px !important;
     }
 
     h4 {
-      font-size: 11px !important;
+      font-size: 9.6px !important;
       font-weight: 600 !important;
       color: #000 !important;
-      margin: 0 0 3px 0 !important;
+      margin: 0 0 2px 0 !important;
     }
 
     p {
-      font-size: 9px !important;
-      line-height: 1.3 !important;
-      margin: 4px 0 !important;
+      font-size: 8.2px !important;
+      line-height: 1.2 !important;
+      margin: 2px 0 !important;
       color: #333 !important;
     }
 
     /* Section improvements */
     section {
-      margin-bottom: 12px !important;
-      page-break-inside: avoid;
+      margin-bottom: 6px !important;
+      page-break-inside: auto;
+      break-inside: auto;
     }
 
     /* Hide buttons */
@@ -142,14 +143,14 @@ const PrintStyles = createGlobalStyle`
 
     /* List improvements */
     ul, ol {
-      margin: 4px 0 !important;
-      padding-left: 12px !important;
+      margin: 2px 0 !important;
+      padding-left: 10px !important;
     }
 
     li {
-      font-size: 9px !important;
-      line-height: 1.3 !important;
-      margin-bottom: 2px !important;
+      font-size: 8px !important;
+      line-height: 1.2 !important;
+      margin-bottom: 1px !important;
       color: #333 !important;
     }
 
@@ -161,15 +162,15 @@ const PrintStyles = createGlobalStyle`
 
     /* Experience items */
     div[class*="ExperienceItem"] {
-      margin-bottom: 10px !important;
-      padding-left: 12px !important;
+      margin-bottom: 6px !important;
+      padding-left: 8px !important;
       border-left: 2px solid #000 !important;
     }
 
     /* Skills and achievements */
     div[class*="AchievementItem"] {
-      margin-bottom: 8px !important;
-      padding: 8px !important;
+      margin-bottom: 4px !important;
+      padding: 5px !important;
       border: 1px solid #ddd !important;
       border-radius: 0 !important;
     }
@@ -407,12 +408,12 @@ const CVPage: React.FC = () => {
               </h4>
               <Company>Tribhuwan University</Company> •{" "}
               <Duration>2016 - 2022</Duration>
-              <p style={{ marginTop: "12px" }}>
+              <EducationDescription>
                 Completed comprehensive coursework in software engineering, data
                 structures, algorithms, database systems, and web development.
                 Final year project focused on full-stack web development using
                 modern JavaScript frameworks.
-              </p>
+              </EducationDescription>
               <SkillsUsed>
                 <strong>Key Coursework:</strong> Data Structures & Algorithms,
                 Software Engineering, Database Management Systems, Web
@@ -509,13 +510,14 @@ const CVContainer = styled.div<{ $isVisible: boolean }>`
     box-shadow: none !important;
     background: white !important;
     color: black !important;
-    font-size: 11px !important;
-    line-height: 1.4 !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
     border-radius: 0 !important;
-    page-break-inside: avoid;
+    page-break-inside: auto;
+    break-inside: auto;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -556,10 +558,10 @@ const Header = styled.header`
   @media print {
     background: #f8f9fa !important;
     color: black !important;
-    padding: 12px 0 12px 0 !important;
+    padding: 8px 0 7px 0 !important;
     border-bottom: 3px solid #000 !important;
     page-break-after: avoid;
-    margin-bottom: 8px !important;
+    margin-bottom: 4px !important;
     text-align: center !important;
   }
 
@@ -584,7 +586,7 @@ const HeaderContent = styled.div`
 
   @media print {
     grid-template-columns: 1fr !important;
-    gap: 8px !important;
+    gap: 4px !important;
     max-width: none !important;
     margin: 0 !important;
     text-align: center !important;
@@ -657,10 +659,10 @@ const ContactInfo = styled.div`
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    gap: 8px !important;
+    gap: 4px !important;
     padding: 0 !important;
     border: none !important;
-    margin-top: 8px !important;
+    margin-top: 4px !important;
   }
 
   @media (max-width: 768px) {
@@ -697,10 +699,10 @@ const ContactItem = styled.div`
   }
 
   @media print {
-    font-size: 8px !important;
+    font-size: 7.4px !important;
     line-height: 1.2 !important;
     color: #333 !important;
-    margin: 0 6px !important;
+    margin: 0 3px !important;
 
     &:hover {
       color: #333 !important;
@@ -716,7 +718,7 @@ const ContactItem = styled.div`
     &:not(:last-child)::after {
       content: " • ";
       color: #666;
-      margin-left: 6px;
+      margin-left: 4px;
     }
   }
 `;
@@ -730,9 +732,10 @@ const Section = styled.section`
   }
 
   @media print {
-    padding: 8px 0 !important;
-    margin-bottom: 10px !important;
-    page-break-inside: avoid;
+    padding: 5px 0 !important;
+    margin-bottom: 5px !important;
+    page-break-inside: auto;
+    break-inside: auto;
     border-bottom: none !important;
   }
 
@@ -752,8 +755,8 @@ const SectionTitle = styled.h3`
   letter-spacing: 1px;
 
   @media print {
-    font-size: 12px !important;
-    margin-bottom: 6px !important;
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
     padding-bottom: 2px !important;
     border-bottom: 1px solid #000 !important;
     color: #000 !important;
@@ -774,6 +777,7 @@ const SectionContent = styled.div`
 
   @media print {
     color: black !important;
+    line-height: 1.22 !important;
 
     p {
       color: black !important;
@@ -787,8 +791,8 @@ const SkillsGrid = styled.div`
   gap: 20px;
 
   @media print {
-    gap: 12px !important;
-    font-size: 0.85em !important;
+    gap: 6px !important;
+    font-size: 0.8em !important;
   }
 `;
 
@@ -810,12 +814,12 @@ const SkillCategory = styled.div`
   }
 
   @media print {
-    margin-bottom: 12px !important;
+    margin-bottom: 6px !important;
 
     h4 {
-      font-size: 0.95em !important;
-      margin-bottom: 8px !important;
-      padding-bottom: 4px !important;
+      font-size: 0.86em !important;
+      margin-bottom: 4px !important;
+      padding-bottom: 2px !important;
     }
   }
 `;
@@ -827,8 +831,8 @@ const SkillsList = styled.div`
   margin-left: 0;
 
   @media print {
-    line-height: 1.6 !important;
-    font-size: 0.85em !important;
+    line-height: 1.35 !important;
+    font-size: 0.78em !important;
     color: black !important;
   }
 `;
@@ -852,11 +856,11 @@ const SkillTag = styled.span<{ $isPrimary?: boolean; $delay?: number }>`
   }
 
   @media print {
-    font-size: 0.85em !important;
+    font-size: 0.76em !important;
     color: ${(props) => (props.$isPrimary ? "black" : "#666")} !important;
 
     &:not(:last-child)::after {
-      margin: 0 4px !important;
+      margin: 0 3px !important;
       color: #ccc !important;
     }
   }
@@ -869,10 +873,10 @@ const ExperienceItem = styled.div`
   padding-left: 18px;
 
   @media print {
-    margin-bottom: 12px !important;
-    padding-left: 12px !important;
+    margin-bottom: 7px !important;
+    padding-left: 10px !important;
     border-left-width: 2px !important;
-    break-inside: avoid;
+    break-inside: auto;
   }
 `;
 
@@ -905,15 +909,15 @@ const ExperienceHeader = styled.div`
   }
 
   @media print {
-    margin-bottom: 8px !important;
+    margin-bottom: 4px !important;
 
     h4 {
-      font-size: 1.1em !important;
+      font-size: 0.98em !important;
     }
 
     .meta-info {
-      font-size: 0.8em !important;
-      gap: 8px !important;
+      font-size: 0.74em !important;
+      gap: 5px !important;
     }
   }
 
@@ -967,8 +971,8 @@ const TechTags = styled.div`
   }
 
   @media print {
-    margin-top: 8px !important;
-    font-size: 0.8em !important;
+    margin-top: 4px !important;
+    font-size: 0.72em !important;
     color: #666 !important;
 
     strong {
@@ -992,9 +996,17 @@ const SkillsUsed = styled.div`
   }
 
   @media print {
-    margin-top: 8px !important;
-    font-size: 0.8em !important;
+    margin-top: 4px !important;
+    font-size: 0.72em !important;
     color: #666 !important;
+  }
+`;
+
+const EducationDescription = styled.p`
+  margin-top: 12px;
+
+  @media print {
+    margin-top: 4px !important;
   }
 `;
 
@@ -1067,8 +1079,8 @@ const AchievementsGrid = styled.div`
   }
 
   @media print {
-    gap: 10px !important;
-    margin-top: 8px !important;
+    gap: 6px !important;
+    margin-top: 4px !important;
   }
 `;
 
@@ -1095,14 +1107,15 @@ const AchievementItem = styled.div`
 
   @media print {
     background: #f8f9ff !important;
-    padding: 10px !important;
+    gap: 0.45rem !important;
+    padding: 7px !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     border: 1px solid #d6d6d6 !important;
     border-top: 2px solid #333 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    page-break-inside: avoid;
+    page-break-inside: auto;
     transform: none !important;
 
     &:hover {
@@ -1120,6 +1133,11 @@ const AchievementHeader = styled.div`
   grid-template-columns: 2.2rem 1fr;
   gap: 0.7rem;
   align-items: center;
+
+  @media print {
+    grid-template-columns: 1.5rem 1fr !important;
+    gap: 0.4rem !important;
+  }
 `;
 
 const AchievementIcon = styled.span`
@@ -1145,14 +1163,14 @@ const AchievementIcon = styled.span`
 
   @media print {
     color: #333 !important;
-    width: 1.4rem !important;
-    height: 1.4rem !important;
+    width: 1.1rem !important;
+    height: 1.1rem !important;
     border-radius: 0 !important;
     background: #ededed !important;
     border: 1px solid #ccc !important;
 
     svg {
-      font-size: 0.9rem !important;
+      font-size: 0.75rem !important;
     }
   }
 `;
@@ -1167,7 +1185,7 @@ const AchievementTitleGroup = styled.div`
 
     @media print {
       color: #000 !important;
-      font-size: 0.9rem !important;
+      font-size: 0.8rem !important;
     }
   }
 
@@ -1180,7 +1198,7 @@ const AchievementTitleGroup = styled.div`
 
     @media print {
       color: #555 !important;
-      font-size: 0.72rem !important;
+      font-size: 0.66rem !important;
       margin-top: 0 !important;
     }
   }
@@ -1192,6 +1210,10 @@ const AchievementList = styled.ul`
   padding: 0;
   display: grid;
   gap: 0.55rem;
+
+  @media print {
+    gap: 0.28rem !important;
+  }
 `;
 
 const AchievementListItem = styled.li`
@@ -1204,7 +1226,7 @@ const AchievementListItem = styled.li`
     border: 1px solid #ddd !important;
     border-radius: 0 !important;
     background: #fff !important;
-    padding: 6px !important;
+    padding: 4px !important;
   }
 `;
 
@@ -1216,8 +1238,8 @@ const AchievementItemTitle = styled.p`
 
   @media print {
     color: #000 !important;
-    font-size: 0.8rem !important;
-    margin-bottom: 2px !important;
+    font-size: 0.72rem !important;
+    margin-bottom: 1px !important;
   }
 `;
 
@@ -1239,16 +1261,16 @@ const AchievementMeta = styled.div`
   }
 
   @media print {
-    margin-bottom: 2px !important;
+    margin-bottom: 1px !important;
 
     span,
     small {
-      font-size: 0.68rem !important;
+      font-size: 0.62rem !important;
       border-radius: 0 !important;
       border: 1px solid #d3d3d3 !important;
       background: #f4f4f4 !important;
       color: #444 !important;
-      padding: 2px 4px !important;
+      padding: 1px 3px !important;
     }
   }
 `;
@@ -1261,8 +1283,8 @@ const AchievementDetails = styled.p`
 
   @media print {
     color: #555 !important;
-    font-size: 0.75rem !important;
-    line-height: 1.35 !important;
+    font-size: 0.68rem !important;
+    line-height: 1.2 !important;
   }
 `;
 
@@ -1306,7 +1328,7 @@ const FocusGrid = styled.div`
 
   @media print {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+    gap: 6px !important;
   }
 `;
 
@@ -1334,10 +1356,13 @@ const FocusCard = styled.article`
 
   @media print {
     background: #f8f9ff !important;
+    grid-template-columns: 1.5rem 1fr !important;
+    gap: 6px !important;
+    padding: 6px !important;
     border: 1px solid #ddd !important;
     border-radius: 0 !important;
     transform: none !important;
-    break-inside: avoid;
+    break-inside: auto;
   }
 `;
 
@@ -1360,14 +1385,14 @@ const FocusContent = styled.div`
   @media print {
     h4 {
       color: #000 !important;
-      font-size: 0.85rem !important;
+      font-size: 0.75rem !important;
       margin-bottom: 0.1rem !important;
     }
 
     p {
       color: #555 !important;
-      font-size: 0.8rem !important;
-      line-height: 1.35 !important;
+      font-size: 0.68rem !important;
+      line-height: 1.2 !important;
       margin: 0 !important;
     }
   }
@@ -1389,12 +1414,16 @@ const FocusIcon = styled.span`
   }
 
   @media print {
-    width: 1.3rem !important;
-    height: 1.3rem !important;
+    width: 0.95rem !important;
+    height: 0.95rem !important;
     border-radius: 0 !important;
     background: #ededed !important;
     border: 1px solid #ccc !important;
     color: #333 !important;
+
+    svg {
+      font-size: 0.62rem !important;
+    }
   }
 `;
 
