@@ -267,7 +267,11 @@ const SectionThreeScene = ({ variant }: SectionThreeSceneProps) => {
         document.documentElement.scrollHeight - window.innerHeight,
         1,
       );
-      scrollProgress = THREE.MathUtils.clamp(window.scrollY / scrollableHeight, 0, 1);
+      scrollProgress = THREE.MathUtils.clamp(
+        window.scrollY / scrollableHeight,
+        0,
+        1,
+      );
     };
 
     applyThemeColors();

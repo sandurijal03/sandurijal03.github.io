@@ -2,7 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import Brightness4 from "@mui/icons-material/Brightness4";
 import Menu from "@mui/icons-material/Menu";
-import { IconButton, Switch as MUSwitch } from "@mui/material";
+import {
+  CircularProgress,
+  IconButton,
+  Switch as MUSwitch,
+} from "@mui/material";
 
 import Sidebar from "./components/Sidebar";
 import AppThreeBackground from "./components/AppThreeBackground";
@@ -20,7 +24,7 @@ export const Main = () => {
         path: "/",
         element: (
           <App>
-            <React.Suspense fallback={<div>Loading...</div>}>
+            <React.Suspense fallback={<SuspenseFallback />}>
               <SinglePage />
             </React.Suspense>
           </App>
@@ -56,6 +60,15 @@ export const Main = () => {
     },
   );
   return <RouterProvider router={router} />;
+};
+
+const SuspenseFallback = () => {
+  return (
+    <LoadingFallback role="status" aria-live="polite">
+      <CircularProgress size={34} thickness={4.2} />
+      <span>Loading...</span>
+    </LoadingFallback>
+  );
 };
 
 type AppProps = {
@@ -125,6 +138,26 @@ const AppShell = styled.div`
   min-height: 100vh;
   overflow-x: hidden;
   isolation: isolate;
+`;
+
+const LoadingFallback = styled.div`
+  min-height: 62vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.85rem;
+  color: var(--font-light-color);
+
+  .MuiCircularProgress-root {
+    color: var(--primary-color);
+  }
+
+  span {
+    font-size: 0.86rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+  }
 `;
 
 const MainContentStyled = styled.main`
