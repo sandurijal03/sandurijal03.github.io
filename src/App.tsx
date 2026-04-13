@@ -79,10 +79,58 @@ const App: React.FC<AppProps> = ({ children }) => {
   const [theme, setTheme] = React.useState("darkTheme");
   const [checked, setChecked] = React.useState(false);
   const [navToggle, setNavToggle] = React.useState(false);
+  const sidebarRef = React.useRef<HTMLDivElement | null>(null);
+  const menuButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
   React.useEffect(() => {
     document.documentElement.className = theme;
   }, [theme]);
+
+  React.useEffect(() => {
+    if (!navToggle) {
+      return undefined;
+    }
+
+    const handlePointerOutside = (event: MouseEvent | TouchEvent) => {
+      if (window.innerWidth > 1200) {
+        return;
+      }
+
+      const target = event.target as Node | null;
+
+      if (!target) {
+        return;
+      }
+
+      if (sidebarRef.current?.contains(target)) {
+        return;
+      }
+
+      if (menuButtonRef.current?.contains(target)) {
+        return;
+      }
+
+      setNavToggle(false);
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setNavToggle(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerOutside);
+    document.addEventListener("touchstart", handlePointerOutside, {
+      passive: true,
+    });
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerOutside);
+      document.removeEventListener("touchstart", handlePointerOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [navToggle]);
 
   const themeToggler = () => {
     if (theme === "lightTheme") {
@@ -97,7 +145,11 @@ const App: React.FC<AppProps> = ({ children }) => {
   return (
     <AppShell className="App">
       <AppThreeBackground />
-      <Sidebar navToggle={navToggle} onNavigate={() => setNavToggle(false)} />
+      <Sidebar
+        navToggle={navToggle}
+        onNavigate={() => setNavToggle(false)}
+        sidebarRef={sidebarRef}
+      />
       <div className="theme">
         <div className="lightDarkMode">
           <div className="leftContent">
@@ -115,7 +167,10 @@ const App: React.FC<AppProps> = ({ children }) => {
         </div>
       </div>
       <div className="hamburgerMenu">
-        <IconButton onClick={() => setNavToggle(!navToggle)}>
+        <IconButton
+          ref={menuButtonRef}
+          onClick={() => setNavToggle(!navToggle)}
+        >
           <Menu />
         </IconButton>
       </div>

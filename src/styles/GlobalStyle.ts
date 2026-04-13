@@ -216,6 +216,7 @@ const GlobalStyled = createGlobalStyle`
   body {
     background-color: var(--background-dark-color);
     color: var(--font-light-color)
+    overflow-x: hidden;
   }
 
 
@@ -278,17 +279,41 @@ const GlobalStyled = createGlobalStyle`
       font-size: 1.7rem;
       color: var(--white-color);
     }
+
+    @media screen and (max-width: 768px) {
+      top: auto;
+      bottom: 0.9rem;
+      right: 0.75rem;
+      width: 4.7rem;
+      height: 2.5rem;
+      border-radius: 999px;
+      padding: 0 0.15rem;
+      backdrop-filter: blur(4px);
+
+      svg {
+        font-size: 1.2rem;
+      }
+    }
   }
 
   /* global media queries */
     .hamburgerMenu {
-      position:absolute;
+      position:fixed;
       right:5%;
       top:3%;
       display:none;
       z-index:15;
       svg  {
         font-size :3rem;
+      }
+
+      @media screen and (max-width: 768px) {
+        top: 0.75rem;
+        right: 0.65rem;
+
+        svg {
+          font-size: 2rem;
+        }
       }
     }
 

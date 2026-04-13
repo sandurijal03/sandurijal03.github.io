@@ -122,9 +122,12 @@ const ContactPageStyled = styled.section`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 2rem;
+    align-items: start;
 
     @media screen and (max-width: 978px) {
       grid-template-columns: repeat(1, 1fr);
+      grid-row-gap: 1.2rem;
+
       .formButton {
         margin-bottom: 2rem;
       }
@@ -133,8 +136,9 @@ const ContactPageStyled = styled.section`
     .rightContent {
       display: grid;
       grid-template-columns: repeat(1, 1fr);
+
       @media screen and (max-width: 502px) {
-        width: 70%;
+        width: 100%;
       }
     }
     .contactTitle {
@@ -152,6 +156,7 @@ const ContactPageStyled = styled.section`
       .formField {
         margin-top: 2rem;
         position: relative;
+
         label {
           position: absolute;
           left: 20px;
@@ -159,7 +164,9 @@ const ContactPageStyled = styled.section`
           display: inline-block;
           background-color: var(--background-dark-color);
           padding: 0 0.5rem;
+          font-size: 0.86rem;
         }
+
         input {
           border: 1px solid var(--border-color);
           outline: none;
@@ -178,8 +185,34 @@ const ContactPageStyled = styled.section`
           padding: 0.8rem 1rem;
         }
       }
+
       .formButton {
         margin-bottom: 3rem;
+      }
+
+      @media screen and (max-width: 640px) {
+        .formField {
+          margin-top: 1.55rem;
+
+          label {
+            left: 12px;
+            top: -14px;
+            font-size: 0.78rem;
+          }
+
+          input {
+            height: 2.9rem;
+            padding: 0 12px;
+          }
+
+          textarea {
+            padding: 0.75rem 0.8rem;
+          }
+        }
+
+        .formButton {
+          margin-bottom: 1.4rem;
+        }
       }
     }
   }

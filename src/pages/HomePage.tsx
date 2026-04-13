@@ -66,7 +66,7 @@ const HomePage = () => {
 
 const HomePageStyled = styled.header`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
 
   &::before {
@@ -88,8 +88,14 @@ const HomePageStyled = styled.header`
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    width: 80%;
+    width: min(80%, 50rem);
     z-index: 2;
+
+    p {
+      margin: 0 auto;
+      line-height: 1.6;
+      max-width: 46rem;
+    }
 
     .icons {
       display: flex;
@@ -114,6 +120,59 @@ const HomePageStyled = styled.header`
         svg {
           margin: 0.5rem;
         }
+      }
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    .typography {
+      width: min(92%, 34rem);
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    min-height: calc(100vh - 3.8rem);
+
+    .typography {
+      width: 94%;
+
+      h1 {
+        font-size: 2.45rem;
+
+        span {
+          font-size: 2.45rem;
+        }
+      }
+
+      p {
+        font-size: 0.96rem;
+      }
+
+      .icons {
+        .icon {
+          border-width: 1px;
+
+          svg {
+            margin: 0.45rem;
+            font-size: 1.35rem;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 420px) {
+    .typography {
+      h1 {
+        font-size: 2rem;
+
+        span {
+          font-size: 2rem;
+        }
+      }
+
+      p {
+        font-size: 0.9rem;
       }
     }
   }

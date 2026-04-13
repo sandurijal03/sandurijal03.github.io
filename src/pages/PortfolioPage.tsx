@@ -242,6 +242,10 @@ const FiltersWrap = styled.div`
   flex-wrap: wrap;
   gap: 0.55rem;
   margin-bottom: 1.3rem;
+
+  @media screen and (max-width: 480px) {
+    gap: 0.45rem;
+  }
 `;
 
 const FilterPill = styled.button<{ $active: boolean }>`
@@ -284,6 +288,20 @@ const FilterPill = styled.button<{ $active: boolean }>`
       props.$active ? "rgba(255, 255, 255, 0.2)" : "rgba(77, 163, 255, 0.18)"};
     color: inherit;
   }
+
+  @media screen and (max-width: 520px) {
+    padding: 0.45rem 0.7rem;
+
+    p {
+      font-size: 0.76rem;
+      letter-spacing: 0.03rem;
+    }
+
+    span {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.34rem;
+    }
+  }
 `;
 
 const ProjectsGrid = styled.div`
@@ -321,6 +339,14 @@ const ProjectImage = styled.div`
   position: relative;
   height: 14.5rem;
   overflow: hidden;
+
+  @media screen and (max-width: 860px) {
+    height: 13rem;
+  }
+
+  @media screen and (max-width: 480px) {
+    height: 11.8rem;
+  }
 
   img {
     width: 100%;
@@ -370,6 +396,11 @@ const ProjectActions = styled.div`
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+
+  @media screen and (max-width: 520px) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
 `;
 
 const ActionButton = styled.a`
@@ -387,6 +418,11 @@ const ActionButton = styled.a`
 
   svg {
     font-size: 1rem;
+  }
+
+  @media screen and (max-width: 520px) {
+    font-size: 0.68rem;
+    padding: 0.28rem 0.5rem;
   }
 `;
 

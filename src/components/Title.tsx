@@ -1,5 +1,5 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
 type TitleProps = {
   title: string;
@@ -19,6 +19,7 @@ const Title: React.FC<TitleProps> = ({ title, span }) => {
 
 const TitleStyled = styled.div`
   position: relative;
+
   h2 {
     color: var(--while-color);
     font-size: 3.1rem;
@@ -34,7 +35,7 @@ const TitleStyled = styled.div`
     }
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       width: 7.4rem;
@@ -44,7 +45,7 @@ const TitleStyled = styled.div`
       left: 0;
     }
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
@@ -66,11 +67,43 @@ const TitleStyled = styled.div`
         font-size: 4rem;
       }
 
+      @media screen and (max-width: 540px) {
+        font-size: 2.6rem;
+      }
+
       @media screen and (max-width: 496px) {
         font-size: 3rem;
       }
+
       @media screen and (max-width: 370px) {
         font-size: 2rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: 540px) {
+    h2 {
+      font-size: 2.25rem;
+      padding-bottom: 0.68rem;
+
+      &::before {
+        width: 5.4rem;
+        height: 0.24rem;
+      }
+
+      &::after {
+        width: 2.55rem;
+        height: 0.24rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: 390px) {
+    h2 {
+      font-size: 1.9rem;
+
+      span {
+        display: none;
       }
     }
   }

@@ -5,11 +5,20 @@ import Navigation from "./Navigation";
 type SidebarProps = {
   navToggle: boolean;
   onNavigate?: () => void;
+  sidebarRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ navToggle, onNavigate }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  navToggle,
+  onNavigate,
+  sidebarRef,
+}) => {
   return (
-    <SidebarStyled className={`${navToggle ? "navToggle" : ""}`} id="sidebar">
+    <SidebarStyled
+      ref={sidebarRef}
+      className={`${navToggle ? "navToggle" : ""}`}
+      id="sidebar"
+    >
       <Navigation onNavigate={onNavigate} />
     </SidebarStyled>
   );
