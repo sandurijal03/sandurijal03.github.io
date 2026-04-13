@@ -21,6 +21,11 @@ const AppThreeBackground = () => {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    const hardwareThreads = navigator.hardwareConcurrency ?? 6;
+    const isLowPowerDevice =
+      hardwareThreads <= 4 || window.matchMedia("(max-width: 840px)").matches;
+    const qualityFactor = isLowPowerDevice ? 0.72 : 1;
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(54, 1, 0.1, 120);
     camera.position.set(0, 0.25, 11.5);
@@ -37,7 +42,7 @@ const AppThreeBackground = () => {
       return undefined;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowPowerDevice ? 1.5 : 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
@@ -81,7 +86,7 @@ const AppThreeBackground = () => {
 
     rootGroup.add(orb, ring, crystal);
 
-    const particleCount = 460;
+    const particleCount = Math.max(260, Math.round(460 * qualityFactor));
     const particlePositions = new Float32Array(particleCount * 3);
 
     for (let index = 0; index < particleCount; index += 1) {
@@ -108,6 +113,52 @@ const AppThreeBackground = () => {
     particles.position.z = -1;
     rootGroup.add(particles);
 
+    const haloGeometry = new THREE.PlaneGeometry(10.5, 5.6);
+    const haloMaterialA = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0.14,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
+    const haloMaterialB = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0.1,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
+    const haloA = new THREE.Mesh(haloGeometry, haloMaterialA);
+    haloA.position.set(-2.8, 1.5, -9.4);
+    haloA.rotation.z = -0.45;
+    const haloB = new THREE.Mesh(haloGeometry, haloMaterialB);
+    haloB.position.set(3.3, -1.6, -10.2);
+    haloB.rotation.z = 0.3;
+    rootGroup.add(haloA, haloB);
+
+    const cometCount = Math.max(6, Math.round(10 * qualityFactor));
+    const cometPositions = new Float32Array(cometCount * 6);
+    const cometState = Array.from({ length: cometCount }, (_, index) => ({
+      x: -12 - Math.random() * 16,
+      y: (Math.random() - 0.5) * 8,
+      z: -2 - Math.random() * 12,
+      speed: 0.045 + Math.random() * 0.08,
+      length: 0.7 + Math.random() * 1.2,
+      drift: (Math.random() - 0.5) * 0.03,
+      phase: index * 0.5 + Math.random() * Math.PI,
+    }));
+    const cometGeometry = new THREE.BufferGeometry();
+    const cometPositionAttribute = new THREE.BufferAttribute(cometPositions, 3);
+    cometGeometry.setAttribute("position", cometPositionAttribute);
+    const cometMaterial = new THREE.LineBasicMaterial({
+      transparent: true,
+      opacity: 0.42,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const comets = new THREE.LineSegments(cometGeometry, cometMaterial);
+    rootGroup.add(comets);
+
     const ambientLight = new THREE.AmbientLight("#ffffff", 0.72);
     const pointLightA = new THREE.PointLight("#ffffff", 1.2, 44);
     pointLightA.position.set(4.5, 4.8, 8);
@@ -121,6 +172,8 @@ const AppThreeBackground = () => {
       const accent = getCssVariable("--app-3d-accent", "#5a8bdc");
       const particlesColor = getCssVariable("--app-3d-particles", "#7cbfff");
       const fogColor = getCssVariable("--app-3d-fog", "#101823");
+      const glowA = getCssVariable("--app-3d-glow-a", secondary);
+      const glowB = getCssVariable("--app-3d-glow-b", accent);
 
       orbMaterial.color.set(primary);
       orbMaterial.emissive.set(primary);
@@ -135,6 +188,9 @@ const AppThreeBackground = () => {
       crystalMaterial.emissiveIntensity = 0.05;
 
       particlesMaterial.color.set(particlesColor);
+      haloMaterialA.color.set(glowA);
+      haloMaterialB.color.set(glowB);
+      cometMaterial.color.set(secondary);
       pointLightA.color.set(secondary);
       pointLightB.color.set(primary);
       scene.fog = new THREE.Fog(fogColor, 14, 34);
@@ -197,10 +253,22 @@ const AppThreeBackground = () => {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
+    let isPageVisible = document.visibilityState === "visible";
+    const handleVisibilityChange = () => {
+      isPageVisible = document.visibilityState === "visible";
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     let frameHandle = 0;
 
     const renderFrame = (time: number) => {
       const elapsed = time * 0.001;
+
+      if (!isPageVisible) {
+        frameHandle = window.requestAnimationFrame(renderFrame);
+        return;
+      }
+
       rootGroup.rotation.y += (pointerX - rootGroup.rotation.y) * 0.02;
       rootGroup.rotation.x += (-pointerY - rootGroup.rotation.x) * 0.02;
       rootGroup.position.y =
@@ -215,6 +283,35 @@ const AppThreeBackground = () => {
 
       particles.rotation.y = elapsed * 0.014;
       particles.rotation.x = elapsed * 0.008;
+
+      haloA.rotation.z = -0.45 + Math.sin(elapsed * 0.08) * 0.11;
+      haloB.rotation.z = 0.3 - Math.cos(elapsed * 0.07) * 0.1;
+      haloA.position.y = 1.5 + Math.sin(elapsed * 0.24) * 0.4;
+      haloB.position.y = -1.6 + Math.cos(elapsed * 0.22) * 0.36;
+
+      for (let index = 0; index < cometCount; index += 1) {
+        const state = cometState[index];
+        state.x += state.speed;
+        state.y += Math.sin(elapsed * 0.8 + state.phase) * 0.002 + state.drift;
+
+        if (state.x > 12.5) {
+          state.x = -12.5 - Math.random() * 8;
+          state.y = (Math.random() - 0.5) * 8;
+          state.z = -2 - Math.random() * 12;
+          state.speed = 0.045 + Math.random() * 0.08;
+          state.length = 0.7 + Math.random() * 1.2;
+          state.drift = (Math.random() - 0.5) * 0.03;
+        }
+
+        const stride = index * 6;
+        cometPositions[stride] = state.x;
+        cometPositions[stride + 1] = state.y;
+        cometPositions[stride + 2] = state.z;
+        cometPositions[stride + 3] = state.x - state.length;
+        cometPositions[stride + 4] = state.y - state.drift * 10;
+        cometPositions[stride + 5] = state.z;
+      }
+      cometPositionAttribute.needsUpdate = true;
 
       camera.position.z = THREE.MathUtils.lerp(
         camera.position.z,
@@ -242,6 +339,7 @@ const AppThreeBackground = () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.cancelAnimationFrame(frameHandle);
       bodyClassObserver.disconnect();
       htmlClassObserver.disconnect();
@@ -250,11 +348,16 @@ const AppThreeBackground = () => {
       ringGeometry.dispose();
       crystalGeometry.dispose();
       particlesGeometry.dispose();
+      haloGeometry.dispose();
+      cometGeometry.dispose();
 
       orbMaterial.dispose();
       ringMaterial.dispose();
       crystalMaterial.dispose();
       particlesMaterial.dispose();
+      haloMaterialA.dispose();
+      haloMaterialB.dispose();
+      cometMaterial.dispose();
 
       renderer.dispose();
 

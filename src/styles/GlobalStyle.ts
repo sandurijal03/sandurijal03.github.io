@@ -92,16 +92,21 @@ const GlobalStyled = createGlobalStyle`
     --app-3d-accent: #3e80cf;
     --app-3d-particles: #3676bd;
     --app-3d-fog: #ebf4fe;
+    --app-3d-glow-a: #78bfff;
+    --app-3d-glow-b: #4a8bd2;
     --home-3d-primary: #1f6fc5;
     --home-3d-secondary: #67b0ff;
+    --home-3d-accent: #4f8ad0;
     --home-3d-particles: #3a7ec8;
     --home-3d-fog: #ebf4fe;
     --portfolio-3d-primary: #146abf;
     --portfolio-3d-secondary: #6eb5ff;
+    --portfolio-3d-accent: #4689ce;
     --portfolio-3d-particles: #3f83cb;
     --portfolio-3d-fog: #edf6ff;
     --contact-3d-primary: #266fc0;
     --contact-3d-secondary: #78bcff;
+    --contact-3d-accent: #4d8fd2;
     --contact-3d-particles: #4489cf;
     --contact-3d-fog: #edf5fd;
   }
@@ -177,16 +182,21 @@ const GlobalStyled = createGlobalStyle`
     --app-3d-accent: #5b92e0;
     --app-3d-particles: #7cbfff;
     --app-3d-fog: #0f1827;
+    --app-3d-glow-a: #88c8ff;
+    --app-3d-glow-b: #5b92e0;
     --home-3d-primary: #4da3ff;
     --home-3d-secondary: #9ad0ff;
+    --home-3d-accent: #69abf2;
     --home-3d-particles: #7cbfff;
     --home-3d-fog: #101823;
     --portfolio-3d-primary: #3d97f4;
     --portfolio-3d-secondary: #95cbff;
+    --portfolio-3d-accent: #66afee;
     --portfolio-3d-particles: #72b8f9;
     --portfolio-3d-fog: #0f1723;
     --contact-3d-primary: #5caeff;
     --contact-3d-secondary: #a6d7ff;
+    --contact-3d-accent: #7dbcf6;
     --contact-3d-particles: #8bc7ff;
     --contact-3d-fog: #0d1724;
   }
