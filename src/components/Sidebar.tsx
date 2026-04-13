@@ -20,8 +20,10 @@ const SidebarStyled = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: var(--sidebar-dark-color);
-  border-bottom: 1px solid var(--border-color);
+  background: transparent;
+  border-bottom: 1px solid rgba(164, 172, 196, 0.2);
+  backdrop-filter: none;
+  box-shadow: none;
   transition: all 0.4s ease-in-out;
   z-index: 18;
 

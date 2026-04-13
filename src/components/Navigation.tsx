@@ -150,49 +150,85 @@ const NavigationStyled = styled.nav`
   align-items: center;
   min-height: 6.1rem;
   width: 100%;
-  padding: 0 1.6rem;
+  padding: 0.78rem 1.6rem;
+  gap: 0.95rem;
+  background: transparent;
+  backdrop-filter: none;
 
   .avatar {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 3.45rem;
+    height: 3.45rem;
+    padding: 2px;
+    background: linear-gradient(
+      140deg,
+      var(--primary-color-light),
+      rgba(77, 163, 255, 0.25)
+    );
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid var(--border-color);
+    border: 1px solid rgba(77, 163, 255, 0.45);
+    box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.13);
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 50%;
     }
   }
 
   .nav-items {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.42rem;
+    background: rgba(127, 145, 180, 0.12);
+    border: 1px solid rgba(164, 172, 196, 0.24);
+    border-radius: 999px;
+    padding: 0.32rem;
 
     .active-class {
-      background-color: var(--primary-color);
+      background: linear-gradient(
+        120deg,
+        var(--primary-color),
+        var(--primary-color-light)
+      );
       color: var(--white-color);
+      box-shadow: 0 7px 16px rgba(77, 163, 255, 0.3);
+
+      &::before {
+        opacity: 0 !important;
+      }
+
+      &::after {
+        transform: scaleX(1) !important;
+        opacity: 0.88 !important;
+      }
     }
 
     li {
       display: inline-flex;
+
       a {
         display: inline-block;
         position: relative;
-        padding: 0.45rem 1rem;
+        padding: 0.52rem 0.95rem;
+        min-width: 6.2rem;
+        text-align: center;
         border-radius: 999px;
         z-index: 10;
         text-transform: uppercase;
-        transition: all 0.4s ease-in-out;
+        transition: all 0.28s ease-in-out;
         font-weight: 600;
-        letter-spacing: 1px;
-        font-size: 0.88rem;
+        letter-spacing: 0.09rem;
+        font-size: 0.78rem;
+        color: var(--font-light-color);
 
         &:hover {
           cursor: pointer;
           color: var(--white-color);
+          transform: translateY(-1px);
         }
+
         &::before {
           content: "";
           position: absolute;
@@ -201,24 +237,46 @@ const NavigationStyled = styled.nav`
           width: 100%;
           height: 100%;
           border-radius: 999px;
-          background-color: var(--primary-color);
-          transition: all 0.4s cubic-bezier(1, -0.2, 0.25, 0.95);
+          background-color: rgba(77, 163, 255, 0.24);
+          transition: all 0.3s cubic-bezier(1, -0.2, 0.25, 0.95);
           z-index: -1;
           opacity: 0;
         }
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 22%;
+          right: 22%;
+          bottom: 6px;
+          height: 2px;
+          border-radius: 999px;
+          background: rgba(221, 239, 255, 0.95);
+          transform: scaleX(0);
+          transform-origin: center;
+          transition: transform 0.25s ease;
+          opacity: 0.5;
+        }
       }
+
       a:hover::before {
-        opacity: 0.2;
+        opacity: 1;
+      }
+
+      a:hover::after {
+        transform: scaleX(0.95);
       }
     }
   }
 
   footer {
-    border-left: 1px solid var(--border-color);
-    padding-left: 1rem;
+    border-left: 1px solid rgba(164, 172, 196, 0.2);
+    padding-left: 0.95rem;
+
     p {
       padding: 0;
-      font-size: 0.85rem;
+      font-size: 0.74rem;
+      letter-spacing: 0.03rem;
       display: block;
       text-align: center;
       color: var(--font-light-color);
@@ -229,8 +287,9 @@ const NavigationStyled = styled.nav`
     flex-direction: column;
     align-items: stretch;
     min-height: auto;
-    padding: 1.1rem 1.4rem 1.2rem;
+    padding: 1.05rem 1.2rem 1.2rem;
     gap: 0.9rem;
+    border-radius: 0 0 1rem 1rem;
 
     .avatar {
       margin: 0 auto;
@@ -243,6 +302,8 @@ const NavigationStyled = styled.nav`
       flex-direction: column;
       align-items: stretch;
       gap: 0.5rem;
+      border-radius: 0.95rem;
+      padding: 0.55rem;
 
       li {
         display: block;
@@ -250,9 +311,16 @@ const NavigationStyled = styled.nav`
         a {
           width: 100%;
           text-align: center;
-          padding: 0.65rem 0.9rem;
-          border: 1px solid var(--border-color);
+          min-width: 0;
+          padding: 0.68rem 0.9rem;
+          border: 1px solid rgba(164, 172, 196, 0.32);
           border-radius: 0.75rem;
+
+          &::after {
+            left: 35%;
+            right: 35%;
+            bottom: 8px;
+          }
         }
       }
     }
