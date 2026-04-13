@@ -49,6 +49,15 @@ const certifications = [
   },
 ];
 
+const aboutMeSummaryText =
+  "Computer Science graduate with 8+ years of experience building software across frontend, backend, and systems. Experienced with SharePoint and SPFx Web Parts, currently learning Rust deeply with Neovim, with a long-term mission to build everything with Rust. Ask me about React, Node.js, JavaScript, and TypeScript.";
+
+const coreSkillsPoints = [
+  "End-to-end system design across frontend and backend.",
+  "Scalability patterns: load balancers, sharding, and distributed systems.",
+  "Microservices architecture and service-oriented backend design.",
+];
+
 const orderedTechnicalSkills: Array<{ title: string; items: string[] }> = [
   {
     title: "Languages",
@@ -205,6 +214,10 @@ const renderCertifications = (): string => {
     `,
     )
     .join("");
+};
+
+const renderPointList = (items: string[]): string => {
+  return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 };
 
 const getCvHtml = (): string => {
@@ -368,6 +381,45 @@ const getCvHtml = (): string => {
           background: #f3f8ff;
         }
 
+        .summary-about {
+          margin-top: 8px;
+        }
+
+        .about-core-grid {
+          margin-top: 8px;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .mini-panel {
+          border: 1px solid #dbe5f8;
+          border-radius: 9px;
+          background: #ffffff;
+          padding: 7px;
+        }
+
+        .mini-panel h4 {
+          margin: 0 0 4px;
+          font-size: 10.2px;
+          color: #17366b;
+          text-transform: uppercase;
+          letter-spacing: 0.6px;
+        }
+
+        .point-list {
+          margin: 0;
+          padding-left: 14px;
+          display: grid;
+          gap: 2px;
+        }
+
+        .point-list li {
+          font-size: 9.6px;
+          line-height: 1.28;
+          color: #2a3552;
+        }
+
         .grid-two {
           display: grid;
           grid-template-columns: 1.14fr 0.86fr;
@@ -388,6 +440,10 @@ const getCvHtml = (): string => {
         .experience-intro {
           display: grid;
           gap: 8px;
+        }
+
+        .experience-panel .entries {
+          margin-top: 10px;
         }
 
         .entry h4 {
@@ -437,21 +493,27 @@ const getCvHtml = (): string => {
           border-radius: 9px;
           padding: 7px;
           background: #ffffff;
+          break-inside: avoid;
+          page-break-inside: avoid;
         }
 
         .skill-card h4 {
           margin: 0 0 5px;
           font-size: 10.4px;
           color: #17366b;
+          break-after: avoid;
+          page-break-after: avoid;
         }
 
         .skill-line {
           margin: 0;
           font-size: 9.6px;
-          line-height: 1.34;
+          line-height: 1.42;
           color: #25497f;
-          word-break: break-word;
-          overflow-wrap: anywhere;
+          white-space: normal;
+          word-break: normal;
+          overflow-wrap: break-word;
+          hyphens: none;
         }
 
         .tags {
@@ -525,6 +587,10 @@ const getCvHtml = (): string => {
             gap: 5px;
           }
 
+          .experience-panel .entries {
+            margin-top: 6px;
+          }
+
           .entry {
             border-left-width: 2px;
             padding-left: 6px;
@@ -546,18 +612,58 @@ const getCvHtml = (): string => {
             line-height: 1.25;
           }
 
+          .summary-about {
+            margin-top: 5px;
+            font-size: 9px;
+            line-height: 1.2;
+          }
+
+          .about-core-grid {
+            margin-top: 6px;
+            gap: 6px;
+          }
+
+          .mini-panel {
+            padding: 5px;
+            border-radius: 0;
+          }
+
+          .mini-panel h4 {
+            margin-bottom: 3px;
+            font-size: 9.2px;
+          }
+
+          .point-list {
+            padding-left: 11px;
+            gap: 1px;
+          }
+
+          .point-list li {
+            font-size: 8.6px;
+            line-height: 1.2;
+          }
+
           .skill-card {
             padding: 6px;
+            break-inside: avoid;
+            page-break-inside: avoid;
           }
 
           .skill-card h4 {
             margin-bottom: 3px;
             font-size: 9.8px;
+            break-after: avoid;
+            page-break-after: avoid;
           }
 
           .skill-line {
-            font-size: 8.8px;
-            line-height: 1.28;
+            font-size: 9px;
+            line-height: 1.34;
+            word-break: normal;
+            overflow-wrap: break-word;
+            hyphens: none;
+            break-before: avoid;
+            page-break-before: avoid;
           }
 
           .target-roles {
@@ -633,9 +739,16 @@ const getCvHtml = (): string => {
           <section class=\"panel\">
             <h3>Summary</h3>
             <p>${escapeHtml(summaryText)}</p>
+            <p class=\"summary-about\">${escapeHtml(aboutMeSummaryText)}</p>
             <ul class=\"highlights\">
               ${highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
             </ul>
+            <div class=\"about-core-grid\">
+              <article class=\"mini-panel\">
+                <h4>Core Skills</h4>
+                <ul class=\"point-list\">${renderPointList(coreSkillsPoints)}</ul>
+              </article>
+            </div>
           </section>
 
           <div class=\"grid-two\">
