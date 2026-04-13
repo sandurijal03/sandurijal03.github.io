@@ -6,10 +6,29 @@ import Title from "../components/Title";
 import { InnerLayout, MainLayout } from "../styles/Layouts";
 import portfolios from "../data/portfolios";
 
+const LazySectionThreeScene = React.lazy(
+  () => import("../components/SectionThreeScene"),
+);
+
 const categories = ["All", ...new Set(portfolios.map((item) => item.category))];
 
 const PortfolioPage = () => {
   const [activeCategory, setActiveCategory] = React.useState("All");
+  const [showScene, setShowScene] = React.useState(false);
+
+  React.useEffect(() => {
+    const shouldEnableScene = window.matchMedia("(min-width: 980px)").matches;
+
+    if (!shouldEnableScene) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setShowScene(true);
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const categoryCounts = React.useMemo(() => {
     return portfolios.reduce<Record<string, number>>((accumulator, item) => {
@@ -29,96 +48,127 @@ const PortfolioPage = () => {
   return (
     <MainLayout>
       <PortfolioPageStyled>
-        <Title title={"Portfolio"} span={"Portfolio"} />
-        <InnerLayout>
-          <HeaderPanel>
-            <HeaderCopy>
-              <h4>Selected Work</h4>
-              <p>
-                Product-minded projects across front-end experiences, API-driven
-                systems, and practical automation tools.
-              </p>
-            </HeaderCopy>
-            <HeaderStats>
-              <StatCard>
-                <strong>{portfolios.length}</strong>
-                <span>Total Projects</span>
-              </StatCard>
-              <StatCard>
-                <strong>{filteredProjects.length}</strong>
-                <span>Visible Projects</span>
-              </StatCard>
-              <StatCard>
-                <strong>{categories.length - 1}</strong>
-                <span>Tech Categories</span>
-              </StatCard>
-            </HeaderStats>
-          </HeaderPanel>
+        <PortfolioSceneLayer>
+          {showScene ? (
+            <React.Suspense fallback={null}>
+              <LazySectionThreeScene variant="portfolio" />
+            </React.Suspense>
+          ) : null}
+        </PortfolioSceneLayer>
 
-          <FiltersWrap>
-            {categories.map((category) => (
-              <FilterPill
-                key={category}
-                $active={activeCategory === category}
-                onClick={() => setActiveCategory(category)}
-                type="button"
-              >
-                <p>{category}</p>
-                <span>
-                  {category === "All"
-                    ? portfolios.length
-                    : categoryCounts[category]}
-                </span>
-              </FilterPill>
-            ))}
-          </FiltersWrap>
+        <PortfolioContent>
+          <Title title={"Portfolio"} span={"Portfolio"} />
+          <InnerLayout>
+            <HeaderPanel>
+              <HeaderCopy>
+                <h4>Selected Work</h4>
+                <p>
+                  Product-minded projects across front-end experiences,
+                  API-driven systems, and practical automation tools.
+                </p>
+              </HeaderCopy>
+              <HeaderStats>
+                <StatCard>
+                  <strong>{portfolios.length}</strong>
+                  <span>Total Projects</span>
+                </StatCard>
+                <StatCard>
+                  <strong>{filteredProjects.length}</strong>
+                  <span>Visible Projects</span>
+                </StatCard>
+                <StatCard>
+                  <strong>{categories.length - 1}</strong>
+                  <span>Tech Categories</span>
+                </StatCard>
+              </HeaderStats>
+            </HeaderPanel>
 
-          <ProjectsGrid>
-            {filteredProjects.map((item) => (
-              <ProjectCard key={item.id}>
-                <ProjectImage>
-                  <img src={item.image} alt={item.title} />
-                  <ImageOverlay data-overlay="true">
-                    <CategoryTag>{item.category}</CategoryTag>
-                    <ProjectActions>
-                      <ActionButton
-                        href={item.link1}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`Open ${item.title} source on GitHub`}
-                      >
-                        <GitHub />
-                        Source
-                      </ActionButton>
-                      <ActionButton
-                        href={item.link2}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`Open ${item.title} live preview`}
-                      >
-                        <LaunchRounded />
-                        Preview
-                      </ActionButton>
-                    </ProjectActions>
-                  </ImageOverlay>
-                </ProjectImage>
-                <ProjectBody>
-                  <h5>{item.title}</h5>
-                  <p>
-                    {item.text ||
-                      `Built under ${item.category} with a focus on clean UX, maintainable code, and production-ready structure.`}
-                  </p>
-                </ProjectBody>
-              </ProjectCard>
-            ))}
-          </ProjectsGrid>
-        </InnerLayout>
+            <FiltersWrap>
+              {categories.map((category) => (
+                <FilterPill
+                  key={category}
+                  $active={activeCategory === category}
+                  onClick={() => setActiveCategory(category)}
+                  type="button"
+                >
+                  <p>{category}</p>
+                  <span>
+                    {category === "All"
+                      ? portfolios.length
+                      : categoryCounts[category]}
+                  </span>
+                </FilterPill>
+              ))}
+            </FiltersWrap>
+
+            <ProjectsGrid>
+              {filteredProjects.map((item) => (
+                <ProjectCard key={item.id}>
+                  <ProjectImage>
+                    <img src={item.image} alt={item.title} />
+                    <ImageOverlay data-overlay="true">
+                      <CategoryTag>{item.category}</CategoryTag>
+                      <ProjectActions>
+                        <ActionButton
+                          href={item.link1}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`Open ${item.title} source on GitHub`}
+                        >
+                          <GitHub />
+                          Source
+                        </ActionButton>
+                        <ActionButton
+                          href={item.link2}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`Open ${item.title} live preview`}
+                        >
+                          <LaunchRounded />
+                          Preview
+                        </ActionButton>
+                      </ProjectActions>
+                    </ImageOverlay>
+                  </ProjectImage>
+                  <ProjectBody>
+                    <h5>{item.title}</h5>
+                    <p>
+                      {item.text ||
+                        `Built under ${item.category} with a focus on clean UX, maintainable code, and production-ready structure.`}
+                    </p>
+                  </ProjectBody>
+                </ProjectCard>
+              ))}
+            </ProjectsGrid>
+          </InnerLayout>
+        </PortfolioContent>
       </PortfolioPageStyled>
     </MainLayout>
   );
 };
 
-const PortfolioPageStyled = styled.section``;
+const PortfolioPageStyled = styled.section`
+  position: relative;
+`;
+
+const PortfolioSceneLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.7;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.9) 15%,
+    rgba(0, 0, 0, 0.7) 80%,
+    transparent
+  );
+`;
+
+const PortfolioContent = styled.div`
+  position: relative;
+  z-index: 1;
+`;
 
 const HeaderPanel = styled.section`
   display: grid;

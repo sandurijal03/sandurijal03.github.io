@@ -5,6 +5,7 @@ import Menu from "@mui/icons-material/Menu";
 import { IconButton, Switch as MUSwitch } from "@mui/material";
 
 import Sidebar from "./components/Sidebar";
+import AppThreeBackground from "./components/AppThreeBackground";
 const SinglePage = React.lazy(() => import("./pages/SinglePage"));
 import {
   Navigate,
@@ -81,7 +82,8 @@ const App: React.FC<AppProps> = ({ children }) => {
   };
 
   return (
-    <div className="App">
+    <AppShell className="App">
+      <AppThreeBackground />
       <Sidebar navToggle={navToggle} onNavigate={() => setNavToggle(false)} />
       <div className="theme">
         <div className="lightDarkMode">
@@ -114,12 +116,20 @@ const App: React.FC<AppProps> = ({ children }) => {
         </div>
         {children}
       </MainContentStyled>
-    </div>
+    </AppShell>
   );
 };
 
+const AppShell = styled.div`
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  isolation: isolate;
+`;
+
 const MainContentStyled = styled.main`
   position: relative;
+  z-index: 1;
   margin-left: 0;
   margin-top: 6.1rem;
   min-height: 100vh;

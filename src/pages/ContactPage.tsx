@@ -1,88 +1,123 @@
-import * as React from 'react';
-import { InnerLayout, MainLayout } from '../styles/Layouts';
-import styled from 'styled-components';
-import Title from '../components/Title';
-import PrimaryButton from '../components/PrimaryButton';
-import Phone from '@mui/icons-material/Phone';
-import Email from '@mui/icons-material/Email';
-import LocationOn from '@mui/icons-material/LocationOn';
-import ContactItem from '../components/ContactItem';
+import * as React from "react";
+import { InnerLayout, MainLayout } from "../styles/Layouts";
+import styled from "styled-components";
+import Title from "../components/Title";
+import PrimaryButton from "../components/PrimaryButton";
+import Phone from "@mui/icons-material/Phone";
+import Email from "@mui/icons-material/Email";
+import LocationOn from "@mui/icons-material/LocationOn";
+import ContactItem from "../components/ContactItem";
+
+const LazySectionThreeScene = React.lazy(
+  () => import("../components/SectionThreeScene"),
+);
 
 const ContactPage = () => {
   const phone = <Phone />;
   const email = <Email />;
   const location = <LocationOn />;
+  const [showScene, setShowScene] = React.useState(false);
+
+  React.useEffect(() => {
+    const shouldEnableScene = window.matchMedia("(min-width: 980px)").matches;
+
+    if (!shouldEnableScene) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setShowScene(true);
+    }, 360);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   return (
     <MainLayout>
-      <Title title={'Contact'} span={'Contact'} />
+      <Title title={"Contact"} span={"Contact"} />
 
       <ContactPageStyled>
-        <InnerLayout className={'contact-section'}>
-          <div className='leftContent'>
-            <div className='contactTitle'>
-              <h4>Get in touch</h4>
+        <ContactSceneLayer>
+          {showScene ? (
+            <React.Suspense fallback={null}>
+              <LazySectionThreeScene variant="contact" />
+            </React.Suspense>
+          ) : null}
+        </ContactSceneLayer>
+        <ContactContent>
+          <InnerLayout className={"contact-section"}>
+            <div className="leftContent">
+              <div className="contactTitle">
+                <h4>Get in touch</h4>
+              </div>
+              <form
+                className="form"
+                method="post"
+                action="mailto: sandurijal03@hotmail.com"
+              >
+                <div className="formField">
+                  <label htmlFor="name">Enter your name</label>
+                  <input type="text" id="name" />
+                </div>
+
+                <div className="formField">
+                  <label htmlFor="email">Enter your email</label>
+                  <input type="email" id="email" />
+                </div>
+
+                <div className="formField">
+                  <label htmlFor="subject">Enter your subject</label>
+                  <input type="text" id="subject" />
+                </div>
+
+                <div className="formField">
+                  <label htmlFor="textarea">Enter Message</label>
+                  <textarea
+                    name="textarea"
+                    id="textarea"
+                    cols={30}
+                    rows={10}
+                  ></textarea>
+                </div>
+                <div className="formField formButton">
+                  <PrimaryButton title="send email" />
+                </div>
+              </form>
             </div>
-            <form
-              className='form'
-              method='post'
-              action='mailto: sandurijal03@hotmail.com'
-            >
-              <div className='formField'>
-                <label htmlFor='name'>Enter your name</label>
-                <input type='text' id='name' />
-              </div>
-
-              <div className='formField'>
-                <label htmlFor='email'>Enter your email</label>
-                <input type='email' id='email' />
-              </div>
-
-              <div className='formField'>
-                <label htmlFor='subject'>Enter your subject</label>
-                <input type='text' id='subject' />
-              </div>
-
-              <div className='formField'>
-                <label htmlFor='textarea'>Enter Message</label>
-                <textarea
-                  name='textarea'
-                  id='textarea'
-                  cols={30}
-                  rows={10}
-                ></textarea>
-              </div>
-              <div className='formField formButton'>
-                <PrimaryButton title='send email' />
-              </div>
-            </form>
-          </div>
-          <div className='rightContent'>
-            <ContactItem
-              title={'Phone'}
-              icon={phone}
-              contact1={'+977-9844646498'}
-              contact2={''}
-            />
-            <ContactItem
-              title={'Email'}
-              icon={email}
-              contact1={'sandurijal03@hotmail.com'}
-              contact2={'sandurijal03@gmail.com'}
-            />
-            <ContactItem
-              title={'Location'}
-              icon={location}
-              contact1={'kathmandu nepal'}
-            />
-          </div>
-        </InnerLayout>
+            <div className="rightContent">
+              <ContactItem
+                title={"Phone"}
+                icon={phone}
+                contact1={"+977-9844646498"}
+                contact2={""}
+              />
+              <ContactItem
+                title={"Email"}
+                icon={email}
+                contact1={"sandurijal03@hotmail.com"}
+                contact2={"sandurijal03@gmail.com"}
+              />
+              <ContactItem
+                title={"Location"}
+                icon={location}
+                contact1={"kathmandu nepal"}
+              />
+            </div>
+          </InnerLayout>
+        </ContactContent>
       </ContactPageStyled>
     </MainLayout>
   );
 };
 
 const ContactPageStyled = styled.section`
+  position: relative;
+
+  .contact-section {
+    position: relative;
+    z-index: 1;
+  }
+
   .contact-section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -148,6 +183,19 @@ const ContactPageStyled = styled.section`
       }
     }
   }
+`;
+
+const ContactSceneLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.68;
+  mask-image: radial-gradient(circle at 50% 52%, black, transparent 78%);
+`;
+
+const ContactContent = styled.div`
+  position: relative;
+  z-index: 1;
 `;
 
 export default ContactPage;

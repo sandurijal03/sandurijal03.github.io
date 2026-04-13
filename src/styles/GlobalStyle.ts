@@ -87,6 +87,23 @@ const GlobalStyled = createGlobalStyle`
     --resume-experience-3d-fog: #eaf3fe;
     --resume-experience-3d-overlay-start: rgba(255, 255, 255, 0.66);
     --resume-experience-3d-overlay-end: rgba(255, 255, 255, 0.9);
+    --app-3d-primary: #1f6fc5;
+    --app-3d-secondary: #62a8f3;
+    --app-3d-accent: #3e80cf;
+    --app-3d-particles: #3676bd;
+    --app-3d-fog: #ebf4fe;
+    --home-3d-primary: #1f6fc5;
+    --home-3d-secondary: #67b0ff;
+    --home-3d-particles: #3a7ec8;
+    --home-3d-fog: #ebf4fe;
+    --portfolio-3d-primary: #146abf;
+    --portfolio-3d-secondary: #6eb5ff;
+    --portfolio-3d-particles: #3f83cb;
+    --portfolio-3d-fog: #edf6ff;
+    --contact-3d-primary: #266fc0;
+    --contact-3d-secondary: #78bcff;
+    --contact-3d-particles: #4489cf;
+    --contact-3d-fog: #edf5fd;
   }
 
   .darkTheme{
@@ -155,6 +172,23 @@ const GlobalStyled = createGlobalStyle`
     --resume-experience-3d-fog: #101823;
     --resume-experience-3d-overlay-start: rgba(16, 18, 26, 0.34);
     --resume-experience-3d-overlay-end: rgba(16, 18, 26, 0.74);
+    --app-3d-primary: #4da3ff;
+    --app-3d-secondary: #9ad0ff;
+    --app-3d-accent: #5b92e0;
+    --app-3d-particles: #7cbfff;
+    --app-3d-fog: #0f1827;
+    --home-3d-primary: #4da3ff;
+    --home-3d-secondary: #9ad0ff;
+    --home-3d-particles: #7cbfff;
+    --home-3d-fog: #101823;
+    --portfolio-3d-primary: #3d97f4;
+    --portfolio-3d-secondary: #95cbff;
+    --portfolio-3d-particles: #72b8f9;
+    --portfolio-3d-fog: #0f1723;
+    --contact-3d-primary: #5caeff;
+    --contact-3d-secondary: #a6d7ff;
+    --contact-3d-particles: #8bc7ff;
+    --contact-3d-fog: #0d1724;
   }
 
 
